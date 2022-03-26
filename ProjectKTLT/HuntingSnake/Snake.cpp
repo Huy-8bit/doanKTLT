@@ -83,23 +83,23 @@ void PrintLogo()
 	{
 		char Line[] = "  S-S-S   N-N     N      A-A      K    K  E-E-E-E";
 		GotoXY(logo_X, logo_Y);
-		TextColor(i, Line);
+		printColorText(i, Line);
 
 		strcpy(Line, " S        N  N    N     A   A     K  K    E");
 		GotoXY(logo_X, logo_Y + 1);
-		TextColor(i, Line);
+		printColorText(i, Line);
 
 		strcpy(Line, "  S-S-S   N   N   N    A-A-A-A    K-K     E-E-E-E");
 		GotoXY(logo_X, logo_Y + 2);
-		TextColor(i, Line);
+		printColorText(i, Line);
 
 		strcpy(Line, "       S  N    N  N   A       A   K  K    E");
-		GotoXY(logo_X, logo_Y + 3);
-		TextColor(i, Line);
+		GotoXY(logo_X, logo_Y + 3);		
+		printColorText(i, Line);
 
 		strcpy(Line, "  S-S-S   N     N-N  A         A  K    K  E-E-E-E");
-		GotoXY(logo_X, logo_Y + 4);
-		TextColor(i, Line);
+		GotoXY(logo_X, logo_Y + 4);		
+		printColorText(i, Line);
 		Sleep(70);
 	}
 }
@@ -114,11 +114,14 @@ MENU gameMenu()
 	PrintLogo();
 
 	GotoXY(menu_X, menu_Y);
-	TextColor(3, newgame);
+	printColorText(COLOR_LIGHT_BLUE, newgame);
+	
 	GotoXY(menu_X, menu_Y + 2);
 	cout << highlength;
+
 	GotoXY(menu_X, menu_Y + 4);
 	cout << exitgame;
+
 	select.choice = newgame;
 	while (true)
 	{
@@ -128,11 +131,12 @@ MENU gameMenu()
 			if ((int)select.selecting == 13)
 				break;
 			if (select.selecting == 's')
-			{
+			{				
 				GotoXY(menu_X, menu_Y);
-				TextColor(7, newgame);
+				printColorText(COLOR_WHITE, newgame);
+					
 				GotoXY(menu_X, menu_Y + 2);
-				TextColor(3, highlength);
+				printColorText(COLOR_LIGHT_BLUE, highlength);
 				select.choice = highlength;
 			}
 		}
@@ -147,17 +151,19 @@ MENU gameMenu()
 			if (select.selecting == 's')
 			{
 				GotoXY(menu_X, menu_Y + 2);
-				TextColor(7, highlength);
+				printColorText(COLOR_WHITE, highlength);
+
 				GotoXY(menu_X, menu_Y + 4);
-				TextColor(3, exitgame);
+				printColorText(COLOR_LIGHT_BLUE, exitgame);
 				select.choice = exitgame;
 			}
 			if (select.selecting == 'w')
 			{
 				GotoXY(menu_X, menu_Y + 2);
-				TextColor(7, highlength);
+				printColorText(COLOR_WHITE, highlength);
+
 				GotoXY(menu_X, menu_Y);
-				TextColor(3, newgame);
+				printColorText(COLOR_LIGHT_BLUE, newgame);
 				select.choice = newgame;
 			}
 		}
@@ -169,9 +175,10 @@ MENU gameMenu()
 			if (select.selecting == 'w')
 			{
 				GotoXY(menu_X, menu_Y + 4);
-				TextColor(7, exitgame);
+				printColorText(COLOR_WHITE, exitgame);
+
 				GotoXY(menu_X, menu_Y + 2);
-				TextColor(3, highlength);
+				printColorText(COLOR_LIGHT_BLUE, highlength);
 				select.choice = highlength;
 			}
 		}
@@ -211,7 +218,7 @@ bool ContinueGame()
 	GotoXY(game_X + 3, game_Y + 2);
 	cout << "Do you want to play more?";
 	GotoXY(game_X + 8, game_Y + 4);
-	TextColor(3, yes);
+	printColorText(COLOR_LIGHT_BLUE, yes);
 	GotoXY(game_X + 20, game_Y + 4);
 	cout << no;
 	select.choice = yes;
@@ -228,9 +235,9 @@ bool ContinueGame()
 			if (select.selecting == 'D')
 			{
 				GotoXY(game_X + 8, game_Y + 4);
-				TextColor(7, yes);
+				printColorText(COLOR_WHITE, yes);
 				GotoXY(game_X + 20, game_Y + 4);
-				TextColor(3, no);
+				printColorText(COLOR_LIGHT_BLUE, no);
 				select.choice = no;
 			}
 		}
@@ -241,10 +248,11 @@ bool ContinueGame()
 				break;
 			if (select.selecting == 'A')
 			{
-				GotoXY(game_X + 8, game_Y + 4);
-				TextColor(3, yes);
-				GotoXY(game_X + 20, game_Y + 4);
-				TextColor(7, no);
+				GotoXY(game_X + 8, game_Y + 4);				
+				printColorText(COLOR_LIGHT_BLUE, yes);
+	
+				GotoXY(game_X + 20, game_Y + 4);					
+				printColorText(COLOR_WHITE, no);
 				select.choice = yes;
 			}
 		}
@@ -258,11 +266,16 @@ bool ContinueGame()
 }
 
 // Draw food and snake
-
 void DrawFood()
 {
 	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
-	cout << STUDENT_ID[INDEX_ID];
+
+	char* food = new char[2];
+	food[0] = (unsigned char)219;
+	food[1] = '\0';
+	printColorText(COLOR_RED, food);
+
+	delete[] food;
 }
 
 void DrawSnake()
@@ -285,7 +298,6 @@ void DeleteTail()
 }
 
 // Handle save and load game
-
 bool IsExistedFileName(string FileName)
 {
 	ifstream f_user(".\\Data\\username.txt");
@@ -339,7 +351,7 @@ void SaveData()
 	GotoXY(game_X + 9, game_Y + 2);
 	cout << "Save and Exit";
 	GotoXY(game_X + 14, game_Y + 5);
-	TextColor(3, ok);
+	printColorText(3, ok);
 	GotoXY(game_X + 3, game_Y + 3);
 	cout << "Name: ";
 
@@ -434,7 +446,7 @@ void LoadData()
 	GotoXY(xgame + 11, ygame + 2);
 	cout << "Load data";
 	GotoXY(xgame + 14, ygame + 5);
-	TextColor(3, ok);
+	printColorText(3, ok);
 	GotoXY(xgame + 3, ygame + 3);
 	cout << "Name: ";
 
@@ -587,19 +599,19 @@ void PrintWinner()
 	{
 		char Line1[] = "W   W   W  II  N-N     N";
 		GotoXY(xwinner, ywinner);
-		TextColor(i, Line1);
+		printColorText(i, Line1);
 		strcpy(Line1, "W   W   W  II  N  N    N");
 		GotoXY(xwinner, ywinner + 1);
-		TextColor(i, Line1);
+		printColorText(i, Line1);
 		strcpy(Line1, "W  W W  W  II  N   N   N");
 		GotoXY(xwinner, ywinner + 2);
-		TextColor(i, Line1);
+		printColorText(i, Line1);
 		strcpy(Line1, "W W   W W  II  N    N  N");
 		GotoXY(xwinner, ywinner + 3);
-		TextColor(i, Line1);
+		printColorText(i, Line1);
 		strcpy(Line1, "W       W  II  N     N-N");
 		GotoXY(xwinner, ywinner + 4);
-		TextColor(i, Line1);
+		printColorText(i, Line1);
 		i++;
 		if (i == 14)
 			i = 1;
@@ -774,10 +786,7 @@ void ShowHighLength()
 	fi.close();
 }
 
-//Mot so ham khac
-
-
-
+// Another functions
 void InitialGame()
 {
 	system("title Snake");
@@ -830,7 +839,9 @@ void StartGame()
 
 	DrawBoard(0, 0, WIDTH_CONSOLE, HEIGH_CONSOLE);
 	STATE = 1;
-	PlaySound(L".\\Sound\\main.wav", NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+
+	//PlaySound(L".\\Sound\\main.wav", NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+	turnBackgroundMusic(1);
 }
 
 void ExitGame(thread& t)
@@ -842,6 +853,7 @@ void ExitGame(thread& t)
 void PauseGame(HANDLE t)
 {
 	SuspendThread(t);
+	// draw banner pause
 }
 
 void ProcessDead()
@@ -1002,7 +1014,7 @@ void ThreadFunc()
 			}
 			else
 				DrawSnake();
-			Sleep(500 / SPEED);
+			Sleep(300 / SPEED);
 		}
 		else
 		{
@@ -1014,41 +1026,6 @@ void ThreadFunc()
 			}
 		}
 	}
-}
-
-void TextColor(int color, char* OutputContent)
-{
-	static int __BACKGROUND;
-
-	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-
-	GetConsoleScreenBufferInfo(h, &csbiInfo);
-
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color + (__BACKGROUND << 4));
-
-	cout << OutputContent;
-
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7 + (__BACKGROUND << 4));
-}
-
-void GotoXY(int x, int y)
-{
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
-
-void FixConsoleWindow()
-{
-	RECT ConsoleRect;
-	HWND consoleWindow = GetConsoleWindow();
-	GetWindowRect(consoleWindow, &ConsoleRect);
-	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
-	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
-	SetWindowLong(consoleWindow, GWL_STYLE, style);
-	MoveWindow(consoleWindow, ConsoleRect.left, ConsoleRect.top, 500, 500, TRUE);
 }
 
 void DrawBoard(int x, int y, int width, int height)
@@ -1075,8 +1052,6 @@ void DrawBoard(int x, int y, int width, int height)
 	cout << "Pause : P \t Save : L \t Load: T \t Force exit: Esc";
 }
 
-
-
 void DeleteBox()
 {
 	int column = 30;
@@ -1100,3 +1075,5 @@ void DeleteBox()
 		}
 	}
 }
+
+

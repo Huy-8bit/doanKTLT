@@ -9,14 +9,9 @@
 #include <string.h>
 //#include <mmsystem.h>
 
-#include <conio.h>
-#include <Windows.h>
-#include <iostream>
+#include "Console.h"
 
 #pragma comment(lib, "winmm.lib")
-#pragma warning (disable: 4996)
-
-using namespace std;
 
 //CONSTANT DEFINING
 #define MAX_SIZE_SNAKE 32
@@ -99,10 +94,6 @@ void ProcessDead();
 
 void DeleteTail();
 
-void GotoXY(int x, int y);
-
-void FixConsoleWindow();
-
 void DrawBoard(int x, int y, int width, int height);
 
 void PrintLogo();
@@ -130,7 +121,7 @@ void SaveData();
 void LoadData();
 
 void DeleteBox();
-void TextColor(int color, char* OutputContent);
+void printColorText(int color, char* OutputContent);
 
 bool IsEmptyHighLengthFile();
 void SaveHighLength();
