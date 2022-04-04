@@ -1,5 +1,5 @@
-huy 4
-[NONE] 4
-[NONE] 4
-[NONE] 4
-[NONE] 4
+./save/Save_slot_2.txt 5
+./save/Save_slot_2.txt 5
+./save/Save_slot_1.txt 5
+./save/Save_slot_2.txt 5
+./save/Save_slot_1.txt 5

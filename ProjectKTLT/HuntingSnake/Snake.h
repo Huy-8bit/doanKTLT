@@ -10,104 +10,92 @@
 //#include <mmsystem.h>
 
 #include "Console.h"
+#include "Data.h"
 
 #pragma comment(lib, "winmm.lib")
 
 //CONSTANT DEFINING
-#define MAX_SIZE_SNAKE 32
-#define MAX_SIZE_FOOD 4
+#define MAX_SNAKE_SIZE 32
+#define MAX_FOOD_AMOUNT 4
 #define MAX_SPEED 7
 #define MAX_ROUND 7
 #define STUDENT_ID "20127518201271852012739720127327"
 
 //STRUCT DEFINING
-struct MENU
-{
-	char* choice;
-	char selecting;
+struct MENU {
+	string choice;
+	char pressedButton;
 };
 
-struct HIGHLENGTH
-{
+struct HIGHLENGTH {
 	string name;
 	int length;
 };
 
-//GLOBAL VARIABLES
+// HIGNLENGTH
 extern HIGHLENGTH HighLength[5];
 extern HIGHLENGTH NewLength;
-extern POINT snake[MAX_SIZE_SNAKE];
-extern POINT food[4];
 
-// gate point
-extern POINT gateP;
-extern int INDEX_ID;
+// SNAKE 
+extern POINT snake[MAX_SNAKE_SIZE];
+extern int STATE;
 extern int CHAR_LOCK;
 extern int MOVING;
 extern int SPEED;
-extern int HEIGH_CONSOLE;
-extern int WIDTH_CONSOLE;
-extern int FOOD_INDEX;
-extern int SIZE_SNAKE;
+extern int SNAKE_SIZE;
 extern int SIZE_PLUS;
-extern int STATE;
+extern int INDEX_ID;
+
+// GATE
+extern POINT gateP;
+
+// FOOD
+extern POINT food[4];
+extern int FOOD_INDEX;
+
+// GAME
 extern int ROUND;
 extern bool GATE_EXIST;
-extern char newgame[];
-extern char highlength[];
-extern char exitgame[];
-extern char yes[];
-extern char no[];
-extern char ok[];
-extern int temp;
-extern int win;
+extern int WIN;
 
 //PROTOTYPE
 MENU gameMenu();
 
-bool ContinueGame();
+void continueGame();
 
-bool IsValid(int x, int y);
+bool continueMenu();
 
-void GenerateFood();
+bool isValid(int x, int y);
 
-void ResetData();
+void generateFood();
 
-void StartGame();
+void resetData();
 
-void ExitGame(thread& t);
+void startGame();
 
-void PauseGame(HANDLE t);
+void exitGame(thread& t);
+
+void pauseGame(HANDLE t);
+bool pauseMenu();
 
 bool CrashGate();
 bool CrashWall();
-bool CrashItself();
-void BlinkSnake();
+bool crashItself();
+void blinkSnake();
 
-void Eat();
+void eat();
 
+void processDead();
 
-
-void ProcessDead();
-
-
-
-void DeleteTail();
-
-void DrawBoard(int x, int y, int width, int height);
-
-void PrintLogo();
-
-void DrawFood();
-void DrawSnake();
-
-void DrawGate();
-void ProcessGate();
-void PrintWinner();
+void deleteTail();
 
 
+void drawFood();
+void drawSnake();
 
+void processGate();
 
+// handle moving of snake
 void MoveRight();
 void MoveLeft();
 void MoveDown();
@@ -115,22 +103,14 @@ void MoveUp();
 
 void ThreadFunc();
 
-bool IsExistedFileName(string FileName);
-bool IsValidFileName(string FileName);
-void SaveData();
-void LoadData();
-
-void DeleteBox();
-void printColorText(int color, char* OutputContent);
-
 bool IsEmptyHighLengthFile();
 void SaveHighLength();
 void ResetHighLength();
-void InitializeHighLength();
+void initializeHighLength();
 void CreateNewHighLength();
 void SortHighLength();
 void ShowHighLength();
 
-void InitialGame();
+void initialGame();
 
 #endif // !__snake_h__

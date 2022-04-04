@@ -1,71 +1,70 @@
 #include "Snake.h"
 
-int main()
-{
-	InitialGame();
-	InitializeHighLength();
-	PlaySound(L".\\Sound\\menu.wav", NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+int main() {
+	initialGame();
+	initializeHighLength();
+	turnMusic(MENU_MUSIC);
+	
 	MENU choose = gameMenu();
 
-	while (true)
-	{
-		if (choose.selecting == 13)
-		{
-			if (choose.choice == highlength || choose.choice == exitgame)
-			{
+	while (true) {
+		if (choose.pressedButton == ENTER_KEY) {
+			if (choose.choice == highlength_Menu || choose.choice == exitgame_Menu) {
 				STATE = 0;
 				system("cls");
 				break;
 			}
 			system("cls");
-			STATE = 1;
+			STATE = LIVE;
 			break;
 		}
 	}
-	if (STATE)
-	{
-		StartGame();
+	if (STATE == LIVE) {
+		startGame();
 		thread t1(ThreadFunc);
 		HANDLE handle_t1 = t1.native_handle();
 
-		while (true)
-		{
-			temp = toupper(_getch());
-			if (STATE == 1)
-			{
-				if (win == 9)
-				{
-					PauseGame(handle_t1);
-					ExitGame(t1);
+		while (true) {
+			pressedKey = toupper(_getch());
+			if (STATE == LIVE) {
+				// max level
+				if (WIN == 9) { 
+					pauseGame(handle_t1);
+					exitGame(t1);
 					return 0;
 				}
-				else if (temp == 'P')
-				{
-					PauseGame(handle_t1);
-				}
-				else if (temp == 'L')
-				{
-					PauseGame(handle_t1);
-					SaveData();
-					ExitGame(t1);
-					return 0;
-				}
-				else if (temp == 'T')
-				{
-					PauseGame(handle_t1);
-					LoadData();
+				// Pause game
+				else if (pressedKey == PAUSE_KEY) {					
+					pauseGame(handle_t1);
+					// if player want to stop game
+					if (!pauseMenu()) {
+						exitGame(t1);
+						return 0;
+					}
+
 					ResumeThread(handle_t1);
 				}
-				else if (temp == 27)
-				{
-					ExitGame(t1);
+				// Save game
+				else if (pressedKey == SAVE_KEY) {
+					pauseGame(handle_t1);
+					saveMenu();
+					exitGame(t1);
 					return 0;
 				}
-				else
-				{
-					if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
-					{
-						MOVING = temp;
+				// load game
+				else if (pressedKey == LOAD_KEY) {
+					pauseGame(handle_t1);
+					loadMenu();					
+					ResumeThread(handle_t1);
+				}
+				// exit game
+				else if (pressedKey == ESC_KEY) {
+					exitGame(t1);
+					return 0;
+				}
+				else {
+					if ((pressedKey != CHAR_LOCK) && (pressedKey == 'D' || pressedKey == 'A' || pressedKey == 'W' || pressedKey == 'S')) {
+						MOVING = pressedKey;
 						ResumeThread(handle_t1);
 					}
 				}
