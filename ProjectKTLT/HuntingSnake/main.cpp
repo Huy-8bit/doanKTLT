@@ -5,14 +5,19 @@ int main() {
 	initializeHighLength();
 	turnMusic(MENU_MUSIC);
 	
-	MENU choose = gameMenu();
+	MENU chooseMenu;
 
 	while (true) {
-		if (choose.pressedButton == ENTER_KEY) {
-			if (choose.choice == highlength_Menu || choose.choice == exitgame_Menu) {
+		chooseMenu = gameMenu();
+		if (chooseMenu.pressedButton == ENTER_KEY) {
+			if (chooseMenu.choice == highlength_Menu || chooseMenu.choice == exitgame_Menu) {
 				STATE = 0;
 				system("cls");
 				break;
+			}
+			else if (chooseMenu.choice == setting_Menu) {
+				system("cls");
+				continue;
 			}
 			system("cls");
 			STATE = LIVE;

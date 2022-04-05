@@ -59,6 +59,8 @@ extern int BORDER_WIDTH;
 extern POINT LENGTH_POS;
 extern POINT ROUND_POS;
 
+extern bool HAS_MUSIC;
+
 extern int pressedKey;
 
 void GotoXY(POINT P);
@@ -100,6 +102,8 @@ void clearScreen();
 
 void printColorText(int color, string text);
 
-void goToXYAndPrintColorText(POINT P, string text, int color = 7);
+void goToXYAndPrintColorText(POINT P, string text, int color = COLOR_WHITE);
+
+void goToXYAndPrintColorText(int x, int y, string text, int color = COLOR_WHITE);
 
 void resetPressedKey();

@@ -7,6 +7,7 @@ int BORDER_WIDTH;
 
 POINT LENGTH_POS;
 POINT ROUND_POS;
+bool HAS_MUSIC;
 
 int pressedKey;
 
@@ -38,6 +39,11 @@ void GotoXY(int x, int y) {
 
 void goToXYAndPrintColorText(POINT P, string text, int color) {
 	GotoXY(P);
+	printColorText(color, text);
+}
+
+void goToXYAndPrintColorText(int x, int y, string text, int color) {
+	GotoXY(x, y);
 	printColorText(color, text);
 }
 

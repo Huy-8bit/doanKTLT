@@ -75,6 +75,8 @@ void startGame();
 
 void exitGame(thread& t);
 
+void settingMenu();
+
 void pauseGame(HANDLE t);
 bool pauseMenu();
 

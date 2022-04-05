@@ -66,8 +66,12 @@ void blinkSnake() {
 MENU gameMenu() {
 	MENU menu;
 
-	const int TOTAL_SELECTION = 3;
-	string options[TOTAL_SELECTION] = { "NEW GAME", "HIGH LENGTH", "EXIT GAME" };
+	const int TOTAL_SELECTION = 4;
+	string options[TOTAL_SELECTION] = { "NEW GAME", "HIGH LENGTH", "SETTING", "EXIT GAME" };
+	const int NEWGAME_MODE = 0;
+	const int HIGHLENGTH_MODE = 1;
+	const int SETTING_MODE = 2;
+	const int EXIT_MODE = 3;
 
 	int selectingLine = 0;
 	int SELECTING_COLOR = COLOR_LIGHT_BLUE;
@@ -101,15 +105,20 @@ MENU gameMenu() {
 				menu.pressedButton = '\0';
 			}
 			else if (menu.pressedButton == ENTER_KEY) {			
-				if (selectingLine == 0)
-					menu.choice = options[0];
+				if (selectingLine == NEWGAME_MODE)
+					menu.choice = options[NEWGAME_MODE];
 									
-				else if (selectingLine == 1) {
+				else if (selectingLine == HIGHLENGTH_MODE) {
 					ShowHighLength();
-					menu.choice = options[1];
+					menu.choice = options[HIGHLENGTH_MODE];
 				}
-				else if (selectingLine == 2)
-					menu.choice = options[2];
+				else if (selectingLine == SETTING_MODE) {
+					settingMenu();
+					menu.choice = options[SETTING_MODE];
+				}
+					
+				else if (selectingLine == EXIT_MODE)
+					menu.choice = options[EXIT_MODE];
 
 				break;
 			}
@@ -127,7 +136,8 @@ void continueGame() {
 
 	displaySnakeSize();
 	displayRoundNumber();
-	turnMusic(MAIN_MUSIC);
+	if(HAS_MUSIC)
+		turnMusic(MAIN_MUSIC);
 }
 
 bool continueMenu() {
@@ -142,9 +152,6 @@ bool continueMenu() {
 
 	POINT yesP = { GAME_P.x + 10, GAME_P.y + 4 };
 	POINT noP = { GAME_P.x + 22, GAME_P.y + 4 };
-
-	//GotoXY(food[FOOD_INDEX]);
-	//cout << " ";
 
 	drawOutLine(GAME_P.x, GAME_P.y, column, row);
 
@@ -190,6 +197,72 @@ bool continueMenu() {
 		Continue = false;
 
 	return Continue;
+}
+
+void settingMenu() {
+	int width = 30;
+	int height = 8;
+	int game_X = (CONSOLE_WIDTH - width) / 2;
+	int game_Y = (CONSOLE_HEIGH - height) / 2;
+	POINT outlineP = { game_X, game_Y };
+	POINT chooseP = { game_X + 2 , game_Y + 2 };
+	
+	system("cls");
+	drawOutLine(outlineP.x, outlineP.y, width, height);
+	string text[4] = { "SETTING", "Background music: ON", "Return", "Background music: OFF" };
+
+	int choice = 1;
+	bool state = true;
+
+	GotoXY(chooseP.x + 10, chooseP.y);
+	cout << text[0];
+	while (true) {
+		for (int i = 1; i < 3; i++) {
+			if (choice == i) {
+				GotoXY(chooseP.x, chooseP.y + i);
+				if (i == 1) {					
+					if (state)
+						printColorText(COLOR_LIGHT_BLUE, text[i]);				
+					else 
+						printColorText(COLOR_LIGHT_BLUE, text[i + 2]);											
+				}
+				else 
+					printColorText(COLOR_LIGHT_BLUE, text[i]);					
+			}
+			else {
+				GotoXY(chooseP.x, chooseP.y + i);
+				if (i == 1) 
+					state ? cout << text[i] : cout << text[i + 2];							
+				else 
+					cout << text[i];
+			}
+		}
+		pressedKey = _getch();
+		if (pressedKey != '\0') {
+			if (pressedKey == UP_KEY) {
+				if (choice > 1) 
+					choice--;				
+			}
+			if (pressedKey == DOWN_KEY) {
+				if (choice < 2) 
+					choice++;				
+			}
+			if (pressedKey == ENTER_KEY) {				
+				switch (choice)
+				{
+				case 1:
+					state = !state;
+					turnMusic(MENU_MUSIC);					
+					if (!state)
+						turnMusic(0);
+					break;
+				case 2:
+					return;					
+				}
+			}
+			resetPressedKey();
+		}
+	}
 }
 
 // Draw food and snake
@@ -461,7 +534,8 @@ void startGame() {
 	drawBoard(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGH);
 	STATE = LIVE;
 
-	turnMusic(MAIN_MUSIC);
+	if(HAS_MUSIC)
+		turnMusic(MAIN_MUSIC);
 }
 
 void exitGame(thread& t) {
@@ -540,7 +614,8 @@ void pauseGame(HANDLE t) {
 
 void processDead() {
 	STATE = DEAD;
-	turnMusic(DEAD_MUSIC);
+	if(HAS_MUSIC)
+		turnMusic(DEAD_MUSIC);
 	blinkSnake();
 }
 
