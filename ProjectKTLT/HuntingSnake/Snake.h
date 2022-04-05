@@ -78,8 +78,8 @@ void exitGame(thread& t);
 void pauseGame(HANDLE t);
 bool pauseMenu();
 
-bool CrashGate();
-bool CrashWall();
+bool crashGate();
+bool crashWall();
 bool crashItself();
 void blinkSnake();
 

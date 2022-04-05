@@ -26,14 +26,14 @@ int WIN;
 
 //handle crash and effect 
 
-bool CrashGate() {
+bool crashGate() {
 	POINT head = { snake[SNAKE_SIZE - 1].x, snake[SNAKE_SIZE - 1].y };
 	return (head.x == gateP.x + 1 && head.y == gateP.y) || (head.x == gateP.x - 1 && head.y == gateP.y - 1)
 		|| (head.x == gateP.x && head.y == gateP.y && CHAR_LOCK == 'S') || (head.x == gateP.x + 1 && head.y == gateP.y - 1)
 		|| (head.x == gateP.x - 1 && head.y == gateP.y);
 }
 
-bool CrashWall() {
+bool crashWall() {
 	return (snake[SNAKE_SIZE - 1].x + 1 == BORDER_WIDTH + 1
 		|| snake[SNAKE_SIZE - 1].x == 0
 		|| snake[SNAKE_SIZE - 1].y + 1 == BORDER_HEIGH
@@ -76,8 +76,6 @@ MENU gameMenu() {
 	// Step 1: Print logo of game
 	printGameLogo();
 
-	
-	
 	// default
 	menu.choice = newgame_Menu;
 	
@@ -85,9 +83,9 @@ MENU gameMenu() {
 		// Step 2: Print options of game
 		for (int i = 0; i < TOTAL_SELECTION; i++) {
 			if (selectingLine == i)
-				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i + 2 }, options[i], SELECTING_COLOR);
+				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i * 2 }, options[i], SELECTING_COLOR);
 			else
-				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i + 2 }, options[i]);
+				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i * 2 }, options[i]);
 
 		}
 		//----
@@ -142,16 +140,19 @@ bool continueMenu() {
 	POINT GAME_P = { game_X, game_Y };
 	MENU select;
 
-	GotoXY(food[FOOD_INDEX]);
-	cout << " ";
+	POINT yesP = { GAME_P.x + 10, GAME_P.y + 4 };
+	POINT noP = { GAME_P.x + 22, GAME_P.y + 4 };
+
+	//GotoXY(food[FOOD_INDEX]);
+	//cout << " ";
 
 	drawOutLine(GAME_P.x, GAME_P.y, column, row);
 
 	GotoXY(POINT{ GAME_P.x + 3, GAME_P.y + 2 });
 	cout << "Do you want to play continue?";
-	goToXYAndPrintColorText(POINT{ GAME_P.x + 10, GAME_P.y + 4 }, yes_Text, COLOR_LIGHT_BLUE);
+	goToXYAndPrintColorText(yesP, yes_Text, COLOR_LIGHT_BLUE);
 
-	GotoXY(POINT{ GAME_P.x + 22, GAME_P.y + 4 });
+	GotoXY(noP);
 	cout << no_Text;
 	select.choice = yes_Text;
 
@@ -164,9 +165,9 @@ bool continueMenu() {
 			if (select.pressedButton == ENTER_KEY)
 				break;
 			if (select.pressedButton == 'D') {
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 8, GAME_P.y + 4 }, yes_Text);
+				goToXYAndPrintColorText(yesP, yes_Text);
 
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 20, GAME_P.y + 4 }, no_Text, COLOR_LIGHT_BLUE);
+				goToXYAndPrintColorText(noP, no_Text, COLOR_LIGHT_BLUE);
 				select.choice = no_Text;
 			}
 		}
@@ -176,9 +177,9 @@ bool continueMenu() {
 				break;
 			if (select.pressedButton == 'A')
 			{
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 8, GAME_P.y + 4 }, yes_Text, COLOR_LIGHT_BLUE);
+				goToXYAndPrintColorText(yesP, yes_Text, COLOR_LIGHT_BLUE);
 	
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 20, GAME_P.y + 4 }, no_Text);
+				goToXYAndPrintColorText(noP, no_Text);
 				select.choice = yes_Text;
 			}
 		}
@@ -214,14 +215,6 @@ void deleteTail() {
 }
 
 //Xu ly nguyen do dai snake va khi an xong food o mot cap
-void randomPositionOfGate() {
-	do {
-		gateP.x = rand() % (BORDER_WIDTH - 4) + 2;
-		gateP.y = rand() % (BORDER_HEIGH - 4) + 3;
-	} while (!isValid(gateP.x, gateP.y) || !isValid(gateP.x - 1, gateP.y) || !isValid(gateP.x + 1, gateP.y)
-		|| !isValid(gateP.x - 1, gateP.y - 1) || !isValid(gateP.x + 1, gateP.y - 1));
-}
-
 void processGate() {
 	if (!GATE_EXIST)
 		drawFood();
@@ -580,7 +573,7 @@ void eat() {
 }
 
 void MoveRight() {
-	if (CrashWall() || crashItself() || (CrashGate() && GATE_EXIST)) {
+	if (crashWall() || crashItself() || (crashGate() && GATE_EXIST)) {
 		processDead();
 	}
 	else {
@@ -598,7 +591,7 @@ void MoveRight() {
 
 void MoveLeft()
 {
-	if (CrashWall() || crashItself() || (CrashGate() && GATE_EXIST))
+	if (crashWall() || crashItself() || (crashGate() && GATE_EXIST))
 	{
 		processDead();
 	}
@@ -619,7 +612,7 @@ void MoveLeft()
 
 void MoveDown()
 {
-	if (CrashWall() || crashItself() || (CrashGate() && GATE_EXIST))
+	if (crashWall() || crashItself() || (crashGate() && GATE_EXIST))
 	{
 		processDead();
 	}
@@ -640,7 +633,7 @@ void MoveDown()
 
 void MoveUp()
 {
-	if (CrashWall() || crashItself() || (CrashGate() && GATE_EXIST))
+	if (crashWall() || crashItself() || (crashGate() && GATE_EXIST))
 	{
 		processDead();
 	}

@@ -80,6 +80,7 @@ void drawOutLine(int x, int y, int width, int height);
 void drawBorderForSaveLoadBox(int x, int y, int width, int height);
 
 // GATE
+void randomPositionOfGate();
 void drawGate();
 void deleteGate();
 

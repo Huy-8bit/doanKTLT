@@ -198,7 +198,17 @@ void drawBorderForSaveLoadBox(int x, int y, int width, int height) {
 	}
 }
 
+void randomPositionOfGate() {
+	do {
+		gateP.x = rand() % (BORDER_WIDTH - 4) + 2;
+		gateP.y = rand() % (BORDER_HEIGH - 4) + 3;
+	} while (!isValid(gateP.x, gateP.y) || !isValid(gateP.x - 1, gateP.y) || !isValid(gateP.x + 1, gateP.y)
+		|| !isValid(gateP.x - 1, gateP.y - 1) || !isValid(gateP.x + 1, gateP.y - 1));
+}
+
 void drawGate() {
+
+	randomPositionOfGate();
 
 	GotoXY(POINT{ gateP.x + 1, gateP.y });
 	cout << (unsigned char)223;
