@@ -165,11 +165,11 @@ void loadMenu() {
 			if (pressedKey == ENTER_KEY) {
 				if (selectingLine != nSaveSLot + 1) {
 					fileName = "./save/" + text[selectingLine] + ".txt";
-					loadData(fileName);
-					//GotoXY(60, 16 + selectingLine);
-					
+					loadData(fileName);										
 				}
 				deleteBox(row, column);
+				// TODO: loading Banner and sound effect
+
 				continueGame();
 				break;
 			}

@@ -19,9 +19,10 @@ using namespace std;
 #define COLOR_WHITE				7
 
 // MUSIC 
-#define MAIN_MUSIC				1
-#define MENU_MUSIC				2
+#define MENU_MUSIC				1
+#define LEVEL_UP_MUSIC			2
 #define DEAD_MUSIC				3
+#define TYPE_KEY_SOUND			4
 
 // VALUE FOR STATE
 #define LIVE					1

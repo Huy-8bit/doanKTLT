@@ -60,14 +60,17 @@ void FixConsoleWindow() {
 void turnMusic(int index) {
 	switch (index)
 	{
-	case MAIN_MUSIC:
-		PlaySound(TEXT(".\\Sound\\main.wav"), NULL, SND_LOOP | SND_ASYNC);
-		break;
 	case MENU_MUSIC:
 		PlaySound(TEXT(".\\Sound\\menu.wav"), NULL, SND_LOOP | SND_ASYNC);
 		break;
+	case LEVEL_UP_MUSIC:
+		PlaySound(TEXT(".\\Sound\\LevelUp.wav"), NULL, SND_SYNC);
+		break;
 	case DEAD_MUSIC:
-		PlaySound(TEXT(".\\Sound\\die.wav"), NULL, SND_LOOP | SND_ASYNC);
+		PlaySound(TEXT(".\\Sound\\LoseGame.wav"), NULL, SND_ASYNC);
+		break;
+	case TYPE_KEY_SOUND:
+		PlaySound(TEXT(".\\Sound\\TypeKey.wav"), NULL, SND_ASYNC);
 		break;
 	default:
 		PlaySound(NULL, 0, 0);

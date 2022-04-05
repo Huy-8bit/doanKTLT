@@ -94,6 +94,7 @@ MENU gameMenu() {
 		}
 		//----
 		menu.pressedButton = _getch();
+
 		// Step 3: handle options for user
 		if (menu.pressedButton != '\0') {
 			if (menu.pressedButton == UP_KEY) {
@@ -136,8 +137,6 @@ void continueGame() {
 
 	displaySnakeSize();
 	displayRoundNumber();
-	if(HAS_MUSIC)
-		turnMusic(MAIN_MUSIC);
 }
 
 bool continueMenu() {
@@ -209,7 +208,7 @@ void settingMenu() {
 	
 	system("cls");
 	drawOutLine(outlineP.x, outlineP.y, width, height);
-	string text[4] = { "SETTING", "Background music: ON", "Return", "Background music: OFF" };
+	string text[4] = { "SETTING", "Background music:  ON", "Return", "Background music: OFF" };
 
 	int choice = 1;
 	bool state = true;
@@ -219,7 +218,7 @@ void settingMenu() {
 	while (true) {
 		for (int i = 1; i < 3; i++) {
 			if (choice == i) {
-				GotoXY(chooseP.x, chooseP.y + i);
+				GotoXY(chooseP.x + 3, chooseP.y + i);
 				if (i == 1) {					
 					if (state)
 						printColorText(COLOR_LIGHT_BLUE, text[i]);				
@@ -230,7 +229,7 @@ void settingMenu() {
 					printColorText(COLOR_LIGHT_BLUE, text[i]);					
 			}
 			else {
-				GotoXY(chooseP.x, chooseP.y + i);
+				GotoXY(chooseP.x + 3, chooseP.y + i);
 				if (i == 1) 
 					state ? cout << text[i] : cout << text[i + 2];							
 				else 
@@ -252,6 +251,7 @@ void settingMenu() {
 				{
 				case 1:
 					state = !state;
+					HAS_MUSIC = state;
 					turnMusic(MENU_MUSIC);					
 					if (!state)
 						turnMusic(0);
@@ -316,6 +316,9 @@ void processGate() {
 
 		snake[SNAKE_SIZE - 1].x = gateP.x;
 		snake[SNAKE_SIZE - 1].y = gateP.y + 1;
+		if (HAS_MUSIC) {
+			turnMusic(LEVEL_UP_MUSIC);
+		}
 	}
 }
 
@@ -501,6 +504,7 @@ void initialGame() {
 	SetConsoleCursorInfo(consoleHandle, &info);
 
 	STATE = DEAD;
+	HAS_MUSIC = true;
 }
 
 bool isValid(int x, int y) {
@@ -534,8 +538,7 @@ void startGame() {
 	drawBoard(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGH);
 	STATE = LIVE;
 
-	if(HAS_MUSIC)
-		turnMusic(MAIN_MUSIC);
+	turnMusic(0);
 }
 
 void exitGame(thread& t) {

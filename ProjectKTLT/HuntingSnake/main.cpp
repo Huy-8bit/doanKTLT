@@ -30,7 +30,7 @@ int main() {
 		HANDLE handle_t1 = t1.native_handle();
 
 		while (true) {
-			pressedKey = toupper(_getch());
+			pressedKey = toupper(_getch());		
 			if (STATE == LIVE) {
 				// max level
 				if (WIN == 9) { 
@@ -69,6 +69,8 @@ int main() {
 				}
 				else {
 					if ((pressedKey != CHAR_LOCK) && (pressedKey == 'D' || pressedKey == 'A' || pressedKey == 'W' || pressedKey == 'S')) {
+						if(HAS_MUSIC)
+							turnMusic(TYPE_KEY_SOUND);
 						MOVING = pressedKey;
 						ResumeThread(handle_t1);
 					}
