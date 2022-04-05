@@ -163,13 +163,13 @@ void loadMenu() {
 					selectingLine++;
 			}
 			if (pressedKey == ENTER_KEY) {
+				deleteBox(row, column);
 				if (selectingLine != nSaveSLot + 1) {
 					fileName = "./save/" + text[selectingLine] + ".txt";
-					loadData(fileName);										
-				}
-				deleteBox(row, column);
-				// TODO: loading Banner and sound effect
-
+					loadData(fileName);	
+					// loading Banner and sound effect	
+					printLoadingBanner();
+				}											
 				continueGame();
 				break;
 			}
@@ -228,18 +228,6 @@ void loadData(string fileName) {
 		MOVING = moving_In;
 		CHAR_LOCK = charLock_In;
 		WIN = win_In;
-
-		// loading effect
-		/*
-		GotoXY((BORDER_WIDTH / 2) - 13, (BORDER_HEIGH / 2) - 2);
-		cout << "Loading";
-		for (int i = 0; i < 3; i++) {
-			for (int i = 0; i < 2; i++) {
-				Sleep(1000);
-				cout << ".";
-			}
-		}
-		*/
 
 		if (gateP_In.x != -1 && gateP_In.y != -1) {
 			gateP = gateP_In;

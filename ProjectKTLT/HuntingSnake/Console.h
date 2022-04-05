@@ -23,6 +23,7 @@ using namespace std;
 #define LEVEL_UP_MUSIC			2
 #define DEAD_MUSIC				3
 #define TYPE_KEY_SOUND			4
+#define LOADING_SOUND			5
 
 // VALUE FOR STATE
 #define LIVE					1
@@ -73,6 +74,8 @@ void FixConsoleWindow();
 void turnMusic(int index);
 
 void printGameLogo();
+
+void printLoadingBanner();
 
 void printWinnerBanner();
 

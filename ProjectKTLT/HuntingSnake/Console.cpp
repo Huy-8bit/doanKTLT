@@ -72,6 +72,9 @@ void turnMusic(int index) {
 	case TYPE_KEY_SOUND:
 		PlaySound(TEXT(".\\Sound\\TypeKey.wav"), NULL, SND_ASYNC);
 		break;
+	case LOADING_SOUND:
+		PlaySound(TEXT(".\\Sound\\LoadGame.wav"), NULL, SND_LOOP | SND_ASYNC);
+		break;
 	default:
 		PlaySound(NULL, 0, 0);
 		break;
@@ -100,6 +103,53 @@ void printGameLogo() {
 		}
 		Sleep(70);
 	}
+}
+
+void printLoadingBanner() {
+	int logo_X = (BORDER_WIDTH / 2) - 30;
+	int logo_Y = (BORDER_HEIGH / 2) - 8;
+
+	const int logoLength = 8;
+	string logo[logoLength] = {
+					"  _                     _ _             ",
+					" | |                   | (_)            ",
+					" | |     ___   __ _  __| |_ _ __   __ _ ",
+					" | |    / _ \\ / _` |/ _` | | '_ \\ / _` |",
+					" | |___| (_) | (_| | (_| | | | | | (_| |",
+					" |______\\___/ \\__,_|\\__,_|_|_| |_|\\__, |",
+					"                                   __/ |",
+					"                                  |___/ "
+	};
+	POINT dotP = { logo_X + logo[5].length() + 2 , logo_Y + 5 };
+	
+	if (HAS_MUSIC)
+		turnMusic(LOADING_SOUND);
+	// use for loop to print logo
+	for (int i = 0; i < logoLength; i++) {
+		goToXYAndPrintColorText(POINT{ logo_X, logo_Y + i }, logo[i]);
+	}
+
+	// print DOT ... effect
+	for (int i = 0; i < 3; i++) {
+		GotoXY(dotP.x + i * 4 + 1, dotP.y);
+		cout << "_";
+		GotoXY(dotP.x + i * 4, dotP.y + 1);
+		cout << "(_)";
+		Sleep(1000);
+	}
+
+	turnMusic(0);
+
+	// delete banner
+	clearScreen();
+}
+
+void loadingEffect() {
+	printLoadingBanner();
+	
+
+	GotoXY((BORDER_WIDTH / 2) - 13, (BORDER_HEIGH / 2) - 2);
+	
 }
 
 void printWinnerBanner() {
@@ -293,6 +343,17 @@ void deleteEntityOnScreen() {
 		deleteGate();
 }
 
+void clearScreen() {
+	int xgame = 1;
+	int ygame = 1;
+
+	for (int i = 0; i < BORDER_HEIGH - 2; i++) {
+		GotoXY(POINT{ 1, 1 + i });
+		for (int j = 0; j < BORDER_WIDTH - 1; j++) {
+			cout << " ";
+		}
+	}
+}
 
 void resetPressedKey() {
 	pressedKey = '\0';
