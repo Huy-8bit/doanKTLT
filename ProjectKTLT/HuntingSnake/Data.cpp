@@ -11,11 +11,12 @@ void saveMenu() {
 				"Save_slot_3" ,
 				"Save_slot_4" ,
 				"Save_slot_5" ,
-				"Return" };
+				"Return" 
+	};
 
-	int column = 35;
-	int row = 11;
-	POINT GAME_P = { (CONSOLE_WIDTH / 2) - 15, (CONSOLE_HEIGH / 2) - 3 };
+	int column = 34;
+	int row = 12;
+	POINT GAME_P = { (BORDER_WIDTH - column) / 2, (BORDER_HEIGH - row) / 2 }; 
 
 	int selectingLine = 1;
 
@@ -24,17 +25,16 @@ void saveMenu() {
 
 	// draw border for save box
 	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, column, row);
-	
-	bool hasContinued = true;
-	while (hasContinued) {
+		
+	while (true) {
 		GotoXY(POINT{ GAME_P.x + 9, GAME_P.y + 2});
 		cout << text[0];
 		for (int i = 1; i < nSaveSLot + 2; i++) {
 			if (selectingLine == i) {
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 12, GAME_P.y + 2 + i }, text[i], COLOR_LIGHT_BLUE);
+				goToXYAndPrintColorText(GAME_P.x + 12, GAME_P.y + 2 + i, text[i], COLOR_LIGHT_BLUE);
 			}
 			else {
-				GotoXY(POINT{ GAME_P.x + 12, GAME_P.y + 2 + i });
+				GotoXY(GAME_P.x + 12, GAME_P.y + 2 + i);
 				cout << text[i];
 			}
 		}
@@ -49,21 +49,18 @@ void saveMenu() {
 				if (selectingLine < nSaveSLot + 1) 
 					selectingLine++;				
 			}
-			if (pressedKey == ENTER_KEY) {				
-				if (selectingLine == nSaveSLot + 1) {
-					system("cls");
-					hasContinued = false;
-					//this->main_state = this->pre_state;
-				}
-				else {				
-					//ofstream ofs("./save/" + text[choice] + ".bin", std::ios::binary);
+			if (pressedKey == ENTER_KEY) {		
+				deleteBox(row, column);
+				deleteEntityOnScreen();
+				if (selectingLine != nSaveSLot + 1) {																
 					fileName = "./save/" + text[selectingLine] + ".txt";					
-					saveData(fileName);
-					GotoXY(60, 16 + selectingLine);
-					cout << "Saved!";
-					deleteBox(row, column);
-					return;
+					saveData(fileName);	
+					// saving effect
+					printSavingBanner();
+
 				}
+				continueGame();
+				break;
 			}
 			resetPressedKey();
 		}
@@ -140,14 +137,14 @@ void loadMenu() {
 	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, column, row);
 
 	while (true) {
-		GotoXY(POINT{ GAME_P.x + 9, GAME_P.y + 2 });
+		GotoXY(GAME_P.x + 9, GAME_P.y + 2 );
 		cout << text[0];
 		for (int i = 1; i < nSaveSLot + 2; i++) {
 			if (selectingLine == i) {
-				goToXYAndPrintColorText(POINT{ GAME_P.x + 12, GAME_P.y + 2 + i }, text[i], COLOR_LIGHT_BLUE);
+				goToXYAndPrintColorText(GAME_P.x + 12, GAME_P.y + 2 + i, text[i], COLOR_LIGHT_BLUE);
 			}
 			else {
-				GotoXY(POINT{ GAME_P.x + 12, GAME_P.y + 2 + i });
+				GotoXY(GAME_P.x + 12, GAME_P.y + 2 + i);
 				cout << text[i];
 			}
 		}

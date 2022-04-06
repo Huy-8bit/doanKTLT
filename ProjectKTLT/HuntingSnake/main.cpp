@@ -53,8 +53,7 @@ int main() {
 				else if (pressedKey == SAVE_KEY) {
 					pauseGame(handle_t1);
 					saveMenu();
-					exitGame(t1);
-					return 0;
+					ResumeThread(handle_t1);
 				}
 				// load game
 				else if (pressedKey == LOAD_KEY) {

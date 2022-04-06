@@ -77,6 +77,8 @@ void printGameLogo();
 
 void printLoadingBanner();
 
+void printSavingBanner();
+
 void printWinnerBanner();
 
 void drawBoard(int x, int y, int width, int height);

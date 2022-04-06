@@ -106,21 +106,18 @@ void printGameLogo() {
 }
 
 void printLoadingBanner() {
-	int logo_X = (BORDER_WIDTH / 2) - 30;
-	int logo_Y = (BORDER_HEIGH / 2) - 8;
+	int logo_X = (BORDER_WIDTH / 2) - 25;
+	int logo_Y = (BORDER_HEIGH / 2) - 2;
 
-	const int logoLength = 8;
+	const int logoLength = 5;
 	string logo[logoLength] = {
-					"  _                     _ _             ",
-					" | |                   | (_)            ",
-					" | |     ___   __ _  __| |_ _ __   __ _ ",
-					" | |    / _ \\ / _` |/ _` | | '_ \\ / _` |",
-					" | |___| (_) | (_| | (_| | | | | | (_| |",
-					" |______\\___/ \\__,_|\\__,_|_|_| |_|\\__, |",
-					"                                   __/ |",
-					"                                  |___/ "
+					"  _                 _ _           ",
+					" | |   ___  __ _ __| (_)_ _  __ _ ",
+					" | |__/ _ \\/ _` / _` | | ' \\/ _` |",
+					" |____\\___/\\__,_\\__,_|_|_||_\\__, |",
+					"                            |___/ "
 	};
-	POINT dotP = { logo_X + logo[5].length() + 2 , logo_Y + 5 };
+	POINT dotP = { logo_X + logo[3].length() + 2 , logo_Y + 2 };
 	
 	if (HAS_MUSIC)
 		turnMusic(LOADING_SOUND);
@@ -131,11 +128,11 @@ void printLoadingBanner() {
 
 	// print DOT ... effect
 	for (int i = 0; i < 3; i++) {
+		Sleep(700);
 		GotoXY(dotP.x + i * 4 + 1, dotP.y);
 		cout << "_";
 		GotoXY(dotP.x + i * 4, dotP.y + 1);
 		cout << "(_)";
-		Sleep(1000);
 	}
 
 	turnMusic(0);
@@ -144,12 +141,40 @@ void printLoadingBanner() {
 	clearScreen();
 }
 
-void loadingEffect() {
-	printLoadingBanner();
-	
+void printSavingBanner() {
+	int logo_X = (BORDER_WIDTH / 2) - 22;
+	int logo_Y = (BORDER_HEIGH / 2) - 2;
 
-	GotoXY((BORDER_WIDTH / 2) - 13, (BORDER_HEIGH / 2) - 2);
-	
+	const int logoLength = 5;
+	string logo[logoLength] = {
+					"  ___           _           ",
+					" / __| __ ___ _(_)_ _  __ _ ",
+					" \\__ \\/ _` \\ V / | ' \\/ _` |",
+					" |___/\\__,_|\\_/|_|_||_\\__, |",
+					"                      |___/ "
+	};
+	POINT dotP = { logo_X + logo[3].length() + 2 , logo_Y + 2 };
+
+	if (HAS_MUSIC)
+		turnMusic(LOADING_SOUND);
+	// use for loop to print logo
+	for (int i = 0; i < logoLength; i++) {
+		goToXYAndPrintColorText(logo_X, logo_Y + i, logo[i]);
+	}
+
+	// print DOT ... effect
+	for (int i = 0; i < 3; i++) {
+		Sleep(700);
+		GotoXY(dotP.x + i * 4 + 1, dotP.y);
+		cout << "_";
+		GotoXY(dotP.x + i * 4, dotP.y + 1);
+		cout << "(_)";
+	}
+
+	turnMusic(0);
+
+	// delete banner
+	clearScreen();
 }
 
 void printWinnerBanner() {
