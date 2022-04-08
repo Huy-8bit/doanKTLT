@@ -35,22 +35,34 @@ using namespace std;
 #define PAUSE_KEY				'P'
 #define SAVE_KEY				'F'
 #define LOAD_KEY				'L'
-#define UP_KEY					'w'
-#define DOWN_KEY				's'
-#define LEFT_KEY				'a'
-#define RIGHT_KEY				'd'
+
+#define UP_KEY					'W'
+#define DOWN_KEY				'S'
+#define LEFT_KEY				'A'
+#define RIGHT_KEY				'D'
 
 // Text in game menu
-#define newgame_Menu			"NEW GAME"
-#define highlength_Menu			"HIGH LENGTH"
-#define setting_Menu			"SETTING"
-#define exitgame_Menu			"EXIT GAME"
+#define NEW_GAME_TEXT			"NEW GAME"
+#define LOAD_GAME_TEXT			"LOAD GAME"
+#define HIGH_SCORE_TEXT			"HIGH SCORE"
+#define SETTING_TEXT			"SETTING"
+#define EXIT_GAME_TEXT			"EXIT GAME"
 
-#define yes_Text				"Yes"
-#define no_Text					"No"
-#define ok_Text					"OK"
-#define exit_Text				"Exit"
-#define resume_Text				"Resume"
+#define NEW_GAME_MODE			0
+#define LOAD_GAME_MODE			1
+#define HIGH_SCORE_MODE			2
+#define SETTING_MODE			3
+#define EXIT_GAME_MODE			4
+
+#define YES_TEXT				"Yes"
+#define NO_TEXT					"No"
+#define OK_TEXT					"OK"
+#define EXIT_TEXT				"Exit"
+#define RESUME_TEXT				"Resume"
+#define RESTART_TEXT			"Restart"
+#define CANCEL_TEXT				"Cancel"
+#define LENGTH_TEXT				"LENGTH"
+#define ROUND_TEXT				"ROUND"
 
 
 extern int CONSOLE_HEIGH;
@@ -58,8 +70,8 @@ extern int CONSOLE_WIDTH;
 extern int BORDER_HEIGH;
 extern int BORDER_WIDTH;
 
-extern POINT LENGTH_POS;
-extern POINT ROUND_POS;
+extern POINT LENGTH_VALUE_POS;
+extern POINT ROUND_VALUE_POS;
 
 extern bool HAS_MUSIC;
 

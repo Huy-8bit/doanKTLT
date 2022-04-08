@@ -23,17 +23,18 @@
 //STRUCT DEFINING
 struct MENU {
 	string choice;
+	int mode;
 	char pressedButton;
 };
 
-struct HIGHLENGTH {
+struct HIGHSCORE {
 	string name;
 	int length;
 };
 
 // HIGNLENGTH
-extern HIGHLENGTH HighLength[5];
-extern HIGHLENGTH NewLength;
+extern HIGHSCORE HighLength[5];
+extern HIGHSCORE NewLength;
 
 // SNAKE 
 extern POINT snake[MAX_SNAKE_SIZE];
@@ -56,13 +57,16 @@ extern int FOOD_INDEX;
 extern int ROUND;
 extern bool GATE_EXIST;
 extern int WIN;
+extern bool PLAYING_STATE;
 
 //PROTOTYPE
-MENU gameMenu();
+MENU mainMenu();
+
+void handleMainMenu();
 
 void continueGame();
 
-bool continueMenu();
+void continueMenu();
 
 bool isValid(int x, int y);
 
@@ -77,7 +81,7 @@ void exitGame(thread& t);
 void settingMenu();
 
 void pauseGame(HANDLE t);
-bool pauseMenu();
+void pauseMenu();
 
 bool crashGate();
 bool crashWall();
@@ -110,7 +114,7 @@ void ResetHighLength();
 void initializeHighLength();
 void CreateNewHighLength();
 void SortHighLength();
-void ShowHighLength();
+void showHighLength();
 
 void initialGame();
 

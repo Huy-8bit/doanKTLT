@@ -5,8 +5,8 @@ int CONSOLE_WIDTH;
 int BORDER_HEIGH;
 int BORDER_WIDTH;
 
-POINT LENGTH_POS;
-POINT ROUND_POS;
+POINT LENGTH_VALUE_POS;
+POINT ROUND_VALUE_POS;
 bool HAS_MUSIC;
 
 int pressedKey;
@@ -106,8 +106,17 @@ void printGameLogo() {
 }
 
 void printLoadingBanner() {
-	int logo_X = (BORDER_WIDTH / 2) - 25;
-	int logo_Y = (BORDER_HEIGH / 2) - 2;
+	int logo_X;
+	int logo_Y;
+
+	if (PLAYING_STATE) {
+		logo_X = (BORDER_WIDTH / 2) - 25;
+		logo_Y = (BORDER_HEIGH / 2) - 2;
+	}
+	else {
+		logo_X = (CONSOLE_WIDTH / 2) - 25;
+		logo_Y = (CONSOLE_HEIGH / 2) - 2;
+	}
 
 	const int logoLength = 5;
 	string logo[logoLength] = {
@@ -202,12 +211,15 @@ void printWinnerBanner() {
 }
 
 void drawBoard(int x, int y, int width, int height) {
+	int leftMargin = 4;
+	int topMargin = 3;
+
 	for (int i = 0; i < width + 1; i++) {
 		GotoXY(POINT{ x + i, y });
 		cout << (unsigned char)223;
 		GotoXY(POINT{ x + width - i - 1, y + height - 1 });
 		cout << (unsigned char)220;
-		Sleep(2);
+		Sleep(1);
 	}
 	for (int i = 0; i < height; i++) {
 		GotoXY(x + width, y + height - i - 1);
@@ -219,34 +231,42 @@ void drawBoard(int x, int y, int width, int height) {
 		Sleep(5);
 	}
 
-	LENGTH_POS = { BORDER_WIDTH + 10, 2 };
-	ROUND_POS = { BORDER_WIDTH + 9, 3 };
+	POINT lengthTextPos = { BORDER_WIDTH + leftMargin + 4, topMargin };
+	POINT roundTextPos = { BORDER_WIDTH + leftMargin + 5, topMargin + 2 };
+	LENGTH_VALUE_POS = { lengthTextPos.x + (int)strlen(LENGTH_TEXT) + 2, lengthTextPos.y };
+	ROUND_VALUE_POS = { roundTextPos.x + (int)strlen(ROUND_TEXT) + 2, roundTextPos.y };
 
-	GotoXY(POINT{ BORDER_WIDTH + 2, 2 });
-	cout << "LENGTH  ";
-	GotoXY(LENGTH_POS);
+	GotoXY(lengthTextPos);
+	cout << LENGTH_TEXT << "  ";
+	GotoXY(LENGTH_VALUE_POS);
 	cout << SNAKE_SIZE;
 
-	GotoXY(POINT{ BORDER_WIDTH + 2, 3 });
-	cout << "ROUND  ";
-	GotoXY(ROUND_POS);
+	GotoXY(roundTextPos);
+	cout << ROUND_TEXT << "  ";
+	GotoXY(ROUND_VALUE_POS);
 	cout << ROUND;
 
-	GotoXY(POINT{ BORDER_WIDTH + 2, 4 });
-	cout << "[" << (char)PAUSE_KEY << "]  PAUSE";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 5 });
-	cout << "[" << (char)SAVE_KEY << "]  SAVE";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 6 });
-	cout << "[" << (char)LOAD_KEY << "]  LOAD";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 7 });
+	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 10 });
+	cout << "[" << (char)PAUSE_KEY << "]    PAUSE";
+	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 11 });
+	cout << "[" << (char)SAVE_KEY << "]    SAVE";
+	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 12 });
+	cout << "[" << (char)LOAD_KEY << "]    LOAD";
+	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 13 });
 	cout << "[ESC]  EXIT GAME";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 8 });
+
+	
+	int guideLine = 20;
+	// Guide Line
+	GotoXY(BORDER_WIDTH + leftMargin + 2, guideLine);
+	cout << "GUIDE PLAYER";
+	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
 	cout << "[" << (char)UP_KEY << "]  MOVE UP";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 9 });
+	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
 	cout << "[" << (char)DOWN_KEY << "]  MOVE DOWN";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 10 });
+	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
 	cout << "[" << (char)LEFT_KEY << "]  MOVE LEFT";
-	GotoXY(POINT{ BORDER_WIDTH + 2, 11 });
+	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
 	cout << "[" << (char)RIGHT_KEY << "]  MOVE RIGHT";
 }
 
@@ -324,22 +344,30 @@ void deleteGate() {
 }
 
 void displaySnakeSize() {
-	GotoXY(LENGTH_POS);
+	GotoXY(LENGTH_VALUE_POS);
 	cout << SNAKE_SIZE;
 }
 
 void displayRoundNumber() {
-	GotoXY(ROUND_POS);
+	GotoXY(ROUND_VALUE_POS);
 	cout << ROUND;
 }
 
-void deleteBox(int row, int column) {
-	int xgame = (BORDER_WIDTH - column) / 2;
-	int ygame = (BORDER_HEIGH - row) / 2;
-
-	for (int i = 0; i < row; i++) {
+void deleteBox(int height, int width) {
+	int xgame;
+	int ygame;
+	if (PLAYING_STATE) {
+		xgame = (BORDER_WIDTH - width) / 2;
+		ygame = (BORDER_HEIGH - height) / 2;
+	}
+	else {
+		xgame = (CONSOLE_WIDTH - width) / 2;
+		ygame = (CONSOLE_HEIGH - height) / 2;
+	}
+	 
+	for (int i = 0; i < height; i++) {
 		GotoXY(POINT{ xgame, ygame + i });
-		for (int j = 0; j < column; j++) {
+		for (int j = 0; j < width; j++) {
 			cout << " ";
 		}
 	}

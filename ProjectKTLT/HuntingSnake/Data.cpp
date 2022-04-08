@@ -14,9 +14,9 @@ void saveMenu() {
 				"Return" 
 	};
 
-	int column = 34;
-	int row = 12;
-	POINT GAME_P = { (BORDER_WIDTH - column) / 2, (BORDER_HEIGH - row) / 2 }; 
+	int boxWidth = 34;
+	int boxHeight = 12;
+	POINT GAME_P = { (BORDER_WIDTH - boxWidth) / 2, (BORDER_HEIGH - boxHeight) / 2 }; 
 
 	int selectingLine = 1;
 
@@ -24,7 +24,7 @@ void saveMenu() {
 	turnMusic(0);
 
 	// draw border for save box
-	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, column, row);
+	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, boxWidth, boxHeight);
 		
 	while (true) {
 		GotoXY(POINT{ GAME_P.x + 9, GAME_P.y + 2});
@@ -39,7 +39,7 @@ void saveMenu() {
 			}
 		}
 
-		pressedKey = _getch();
+		pressedKey = toupper(_getch());
 		if (pressedKey != '\0') {
 			if (pressedKey == UP_KEY) {
 				if (selectingLine > 1) 
@@ -50,7 +50,7 @@ void saveMenu() {
 					selectingLine++;				
 			}
 			if (pressedKey == ENTER_KEY) {		
-				deleteBox(row, column);
+				deleteBox(boxHeight, boxWidth);
 				deleteEntityOnScreen();
 				if (selectingLine != nSaveSLot + 1) {																
 					fileName = "./save/" + text[selectingLine] + ".txt";					
@@ -124,17 +124,23 @@ void loadMenu() {
 				"Save_slot_5" ,
 				"Return" };
 
-	int column = 34;
-	int row = 12;
-	POINT GAME_P = { (BORDER_WIDTH - column) / 2, (BORDER_HEIGH - row) / 2};
-
+	int boxWidth = 34;
+	int boxHeight = 12;
+	POINT GAME_P;
+	if (PLAYING_STATE) {
+		GAME_P = { (BORDER_WIDTH - boxWidth) / 2, (BORDER_HEIGH - boxHeight) / 2 };
+	}
+	else {
+		GAME_P = { (CONSOLE_WIDTH - boxWidth) / 2, (CONSOLE_HEIGH - boxHeight) / 2 };
+	}
+	
 	int selectingLine = 1;
 
 	// turn off music
 	turnMusic(0);
 
 	// draw border for save box
-	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, column, row);
+	drawBorderForSaveLoadBox(GAME_P.x, GAME_P.y, boxWidth, boxHeight);
 
 	while (true) {
 		GotoXY(GAME_P.x + 9, GAME_P.y + 2 );
@@ -149,7 +155,7 @@ void loadMenu() {
 			}
 		}
 
-		pressedKey = _getch();
+		pressedKey = toupper(_getch());
 		if (pressedKey != '\0') {
 			if (pressedKey == UP_KEY) {
 				if (selectingLine > 1)
@@ -160,14 +166,14 @@ void loadMenu() {
 					selectingLine++;
 			}
 			if (pressedKey == ENTER_KEY) {
-				deleteBox(row, column);
+				deleteBox(boxHeight, boxWidth);
 				if (selectingLine != nSaveSLot + 1) {
 					fileName = "./save/" + text[selectingLine] + ".txt";
+
 					loadData(fileName);	
 					// loading Banner and sound effect	
 					printLoadingBanner();
-				}											
-				continueGame();
+				}															
 				break;
 			}
 			resetPressedKey();
@@ -229,6 +235,6 @@ void loadData(string fileName) {
 		if (gateP_In.x != -1 && gateP_In.y != -1) {
 			gateP = gateP_In;
 			GATE_EXIST = true;			
-		}
+		}		
 	}
 }

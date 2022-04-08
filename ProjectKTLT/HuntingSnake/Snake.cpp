@@ -1,7 +1,7 @@
 #include "Snake.h"
 
-HIGHLENGTH HighLength[5];
-HIGHLENGTH NewLength;
+HIGHSCORE HighLength[5];
+HIGHSCORE NewLength;
 
 // SNAKE
 POINT snake[MAX_SNAKE_SIZE];
@@ -23,6 +23,7 @@ POINT gateP;
 int ROUND;
 bool GATE_EXIST;
 int WIN;
+bool PLAYING_STATE;
 
 //handle crash and effect 
 
@@ -63,25 +64,25 @@ void blinkSnake() {
 }
 
 //Xu ly giao dien chinh (menu) va hop thoai thoat (exit)
-MENU gameMenu() {
+MENU mainMenu() {
+	system("cls");	
 	MENU menu;
 
-	const int TOTAL_SELECTION = 4;
-	string options[TOTAL_SELECTION] = { "NEW GAME", "HIGH LENGTH", "SETTING", "EXIT GAME" };
-	const int NEWGAME_MODE = 0;
-	const int HIGHLENGTH_MODE = 1;
-	const int SETTING_MODE = 2;
-	const int EXIT_MODE = 3;
+	const int TOTAL_SELECTION = 5;
+	string options[TOTAL_SELECTION] = { NEW_GAME_TEXT, LOAD_GAME_TEXT, HIGH_SCORE_TEXT, SETTING_TEXT, EXIT_GAME_TEXT };
 
 	int selectingLine = 0;
 	int SELECTING_COLOR = COLOR_LIGHT_BLUE;
 	POINT MENU_P{ (CONSOLE_WIDTH / 2) - 5, (CONSOLE_HEIGH / 2) + 3 };
 
+	if (HAS_MUSIC)
+		turnMusic(MENU_MUSIC);
+
 	// Step 1: Print logo of game
 	printGameLogo();
 
 	// default
-	menu.choice = newgame_Menu;
+	menu.choice = NEW_GAME_TEXT;
 	
 	while (true) {
 		// Step 2: Print options of game
@@ -90,10 +91,10 @@ MENU gameMenu() {
 				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i * 2 }, options[i], SELECTING_COLOR);
 			else
 				goToXYAndPrintColorText(POINT{ MENU_P.x, MENU_P.y + i * 2 }, options[i]);
-
 		}
 		//----
-		menu.pressedButton = _getch();
+
+		menu.pressedButton = toupper(_getch());
 
 		// Step 3: handle options for user
 		if (menu.pressedButton != '\0') {
@@ -105,27 +106,54 @@ MENU gameMenu() {
 				if (selectingLine < TOTAL_SELECTION) selectingLine++;
 				menu.pressedButton = '\0';
 			}
-			else if (menu.pressedButton == ENTER_KEY) {			
-				if (selectingLine == NEWGAME_MODE)
-					menu.choice = options[NEWGAME_MODE];
-									
-				else if (selectingLine == HIGHLENGTH_MODE) {
-					ShowHighLength();
-					menu.choice = options[HIGHLENGTH_MODE];
-				}
-				else if (selectingLine == SETTING_MODE) {
-					settingMenu();
-					menu.choice = options[SETTING_MODE];
-				}
-					
-				else if (selectingLine == EXIT_MODE)
-					menu.choice = options[EXIT_MODE];
-
+			else if (menu.pressedButton == ENTER_KEY) {
+				menu.choice = options[selectingLine];
+				menu.mode = selectingLine;
 				break;
 			}
 		}		
 	}
 	return menu;
+}
+
+void handleMainMenu() {
+	MENU chooseMenu;
+	
+	while (true) {
+		chooseMenu = mainMenu();
+		if (chooseMenu.pressedButton == ENTER_KEY) {
+			system("cls");
+			switch (chooseMenu.mode)
+			{				
+			case NEW_GAME_MODE:				
+				STATE = LIVE;
+				PLAYING_STATE = true;
+				return;
+
+			case LOAD_GAME_MODE:				
+				loadMenu();	
+				STATE = LIVE;
+				PLAYING_STATE = true;
+				system("cls");
+				return;
+
+			case HIGH_SCORE_MODE:				
+				showHighLength();			
+				break;
+
+			case SETTING_MODE:
+				settingMenu();				
+				break;
+
+			case EXIT_GAME_MODE:
+				exit(0);
+
+			default:
+				break;
+			}			
+			system("cls");			
+		}
+	}
 }
 
 void continueGame() {
@@ -137,77 +165,86 @@ void continueGame() {
 
 	displaySnakeSize();
 	displayRoundNumber();
+
+	PLAYING_STATE = true;
+	STATE = LIVE;
 }
 
-bool continueMenu() {
-	bool Continue = true;
+void continueMenu() {
 
-	int column = 34;
-	int row = 8;
-	int game_X = (BORDER_WIDTH - column) / 2;
-	int game_Y = (BORDER_HEIGH - row) / 2;
+	int boxWidth = 34;
+	int boxHeight = 8;
+	int game_X = (BORDER_WIDTH - boxWidth) / 2;
+	int game_Y = (BORDER_HEIGH - boxHeight) / 2;
 	POINT GAME_P = { game_X, game_Y };
 	MENU select;
 
-	POINT yesP = { GAME_P.x + 10, GAME_P.y + 4 };
-	POINT noP = { GAME_P.x + 22, GAME_P.y + 4 };
+	POINT restartP = { GAME_P.x + 8, GAME_P.y + 4 };
+	POINT cancelP = { GAME_P.x + 20, GAME_P.y + 4 };
 
-	drawOutLine(GAME_P.x, GAME_P.y, column, row);
+	drawOutLine(GAME_P.x, GAME_P.y, boxWidth, boxHeight);
 
-	GotoXY(POINT{ GAME_P.x + 3, GAME_P.y + 2 });
-	cout << "Do you want to play continue?";
-	goToXYAndPrintColorText(yesP, yes_Text, COLOR_LIGHT_BLUE);
+	GotoXY(POINT{ GAME_P.x + 13, GAME_P.y + 2 });
+	cout << "YOU LOSED";
+	goToXYAndPrintColorText(restartP, RESTART_TEXT, COLOR_LIGHT_BLUE);
 
-	GotoXY(noP);
-	cout << no_Text;
-	select.choice = yes_Text;
-
-	if (pressedKey == 'D' || pressedKey == ENTER_KEY)
-		pressedKey = 'A';
-
+	GotoXY(cancelP);
+	cout << CANCEL_TEXT;
+	select.choice = RESTART_TEXT;
+	
+	if (pressedKey == RIGHT_KEY || pressedKey == ENTER_KEY)
+		pressedKey = LEFT_KEY;
+		
+	// handle user's selection
 	while (true) {
-		if (select.choice == yes_Text) {
-			select.pressedButton = pressedKey;
-			if (select.pressedButton == ENTER_KEY)
-				break;
-			if (select.pressedButton == 'D') {
-				goToXYAndPrintColorText(yesP, yes_Text);
+		select.pressedButton = pressedKey;
+		if (select.pressedButton == ENTER_KEY)
+			break;
 
-				goToXYAndPrintColorText(noP, no_Text, COLOR_LIGHT_BLUE);
-				select.choice = no_Text;
+		if (select.choice == RESTART_TEXT) {
+			if (select.pressedButton == RIGHT_KEY) {
+				goToXYAndPrintColorText(restartP, RESTART_TEXT);
+
+				goToXYAndPrintColorText(cancelP, CANCEL_TEXT, COLOR_LIGHT_BLUE);
+				select.choice = CANCEL_TEXT;
 			}
 		}
-		if (select.choice == no_Text) {
-			select.pressedButton = pressedKey;
-			if (select.pressedButton == ENTER_KEY)
-				break;
-			if (select.pressedButton == 'A')
-			{
-				goToXYAndPrintColorText(yesP, yes_Text, COLOR_LIGHT_BLUE);
+		if (select.choice == CANCEL_TEXT) {
+			if (select.pressedButton == LEFT_KEY) {
+				goToXYAndPrintColorText(restartP, RESTART_TEXT, COLOR_LIGHT_BLUE);
 	
-				goToXYAndPrintColorText(noP, no_Text);
-				select.choice = yes_Text;
+				goToXYAndPrintColorText(cancelP, CANCEL_TEXT);
+				select.choice = RESTART_TEXT;
 			}
 		}
 	}
-	if (select.choice == yes_Text)
-		startGame();
-	if (select.choice == no_Text)
-		Continue = false;
-
-	return Continue;
+	if (select.choice == RESTART_TEXT)
+		PLAYING_STATE = true;
+	else if (select.choice == CANCEL_TEXT)
+		PLAYING_STATE = false;
 }
 
 void settingMenu() {
-	int width = 30;
-	int height = 8;
-	int game_X = (CONSOLE_WIDTH - width) / 2;
-	int game_Y = (CONSOLE_HEIGH - height) / 2;
+	int boxWidth = 30;
+	int boxHeight = 8;
+
+	int game_X;
+	int game_Y;
+	
+	if (PLAYING_STATE) {
+		game_X = (BORDER_WIDTH - boxWidth) / 2;
+		game_Y = (BORDER_HEIGH - boxHeight) / 2;
+	}
+	else {
+		game_X = (CONSOLE_WIDTH - boxWidth) / 2;
+		game_Y = (CONSOLE_HEIGH - boxHeight) / 2;
+	}
+	
 	POINT outlineP = { game_X, game_Y };
 	POINT chooseP = { game_X + 2 , game_Y + 2 };
 	
 	system("cls");
-	drawOutLine(outlineP.x, outlineP.y, width, height);
+	drawOutLine(outlineP.x, outlineP.y, boxWidth, boxHeight);
 	string text[4] = { "SETTING", "Background music:  ON", "Return", "Background music: OFF" };
 
 	int choice = 1;
@@ -236,7 +273,7 @@ void settingMenu() {
 					cout << text[i];
 			}
 		}
-		pressedKey = _getch();
+		pressedKey = toupper(_getch());
 		if (pressedKey != '\0') {
 			if (pressedKey == UP_KEY) {
 				if (choice > 1) 
@@ -292,7 +329,7 @@ void processGate() {
 	if (!GATE_EXIST)
 		drawFood();
 
-	if (snake[SNAKE_SIZE - 1].x == gateP.x && snake[SNAKE_SIZE - 1].y == gateP.y && GATE_EXIST && CHAR_LOCK == 'W') {
+	if (snake[SNAKE_SIZE - 1].x == gateP.x && snake[SNAKE_SIZE - 1].y == gateP.y && GATE_EXIST && CHAR_LOCK == UP_KEY) {
 		SNAKE_SIZE--;
 		SIZE_PLUS++;
 	}
@@ -429,7 +466,7 @@ void SortHighLength() {
 	SaveHighLength();
 }
 
-void ShowHighLength() {
+void showHighLength() {
 	ifstream ifs;
 	ifs.open(".\\Data\\highlength.txt");
 
@@ -504,6 +541,7 @@ void initialGame() {
 	SetConsoleCursorInfo(consoleHandle, &info);
 
 	STATE = DEAD;
+	PLAYING_STATE = false;
 	HAS_MUSIC = true;
 }
 
@@ -519,13 +557,12 @@ void resetData() {
 	ROUND = 1;
 	GATE_EXIST = false;
 	INDEX_ID = 4;
-	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, SNAKE_SIZE = 4;
+	CHAR_LOCK = LEFT_KEY, MOVING = RIGHT_KEY, SPEED = 1; FOOD_INDEX = 0, SNAKE_SIZE = 4;
 	SIZE_PLUS = 0;
 
-	snake[0] = { BORDER_WIDTH / 2 - 2, BORDER_HEIGH / 2 };
-	snake[1] = { BORDER_WIDTH / 2 - 1, BORDER_HEIGH / 2 };
-	snake[2] = { BORDER_WIDTH / 2, BORDER_HEIGH / 2 };
-	snake[3] = { BORDER_WIDTH / 2 + 1, BORDER_HEIGH / 2 };
+	for (int i = 0; i < SNAKE_SIZE; i++) {
+		snake[i] = { BORDER_WIDTH / 2 - 2 + i, BORDER_HEIGH / 2 };
+	}
 
 	generateFood();
 }
@@ -536,7 +573,6 @@ void startGame() {
 	resetData();
 
 	drawBoard(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGH);
-	STATE = LIVE;
 
 	turnMusic(0);
 }
@@ -546,68 +582,62 @@ void exitGame(thread& t) {
 	t.detach();
 }
 
-bool pauseMenu() {	
-	turnMusic(0);
-	bool isContinued = true;
+void pauseMenu() {	
 
 	// draw banner pause
-	int column = 34;
-	int row = 8;
-	string choice;
-	char pressedButton;
-	int game_X = (BORDER_WIDTH - column) / 2;
-	int game_Y = (BORDER_HEIGH - row) / 2;
+	int boxWidth = 34;
+	int boxHeight = 8;
+	MENU menu;
+	
+	int game_X = (BORDER_WIDTH - boxWidth) / 2;
+	int game_Y = (BORDER_HEIGH - boxHeight) / 2;
 	POINT GAME_P = { game_X, game_Y };
 	POINT pausing_P = { GAME_P.x + 14, GAME_P.y + 2 };
 	POINT resume_P = { GAME_P.x + 8, GAME_P.y + 4 };
 	POINT exit_P = { GAME_P.x + 22, GAME_P.y + 4 };
 
-	drawOutLine(GAME_P.x, GAME_P.y, column, row);
+	drawOutLine(GAME_P.x, GAME_P.y, boxWidth, boxHeight);
 
 	GotoXY(pausing_P);
 	cout << "PAUSING";
-	goToXYAndPrintColorText(resume_P, resume_Text, COLOR_LIGHT_BLUE);
+	goToXYAndPrintColorText(resume_P, RESUME_TEXT, COLOR_LIGHT_BLUE);
 
 	GotoXY(exit_P);
-	cout << exit_Text;
+	cout << EXIT_TEXT;
 
-	choice = resume_Text;
+	menu.choice = RESUME_TEXT;
 
 	while (true) {
-		pressedKey = _getch();
-		if (choice == resume_Text) {
-			pressedButton = pressedKey;
-			if (pressedButton == ENTER_KEY)
-				break;
-			if (pressedButton == RIGHT_KEY) {
-				goToXYAndPrintColorText(resume_P, resume_Text);
+		pressedKey = toupper(_getch());
+		menu.pressedButton = pressedKey;
+		if (menu.pressedButton == ENTER_KEY)
+			break;
+		if (menu.choice == RESUME_TEXT) {			
+			if (menu.pressedButton == RIGHT_KEY) {
+				goToXYAndPrintColorText(resume_P, RESUME_TEXT);
 
-				goToXYAndPrintColorText(exit_P, exit_Text, COLOR_LIGHT_BLUE);
-				choice = exit_Text;
+				goToXYAndPrintColorText(exit_P, EXIT_TEXT, COLOR_LIGHT_BLUE);
+				menu.choice = EXIT_TEXT;
 			}
 		}
-		if (choice == exit_Text) {
-			pressedButton = pressedKey;
-			if (pressedButton == ENTER_KEY)
-				break;
-			if (pressedButton == LEFT_KEY)
+		else if (menu.choice == EXIT_TEXT) {		
+			if (menu.pressedButton == LEFT_KEY)
 			{
-				goToXYAndPrintColorText(resume_P, resume_Text, COLOR_LIGHT_BLUE);
+				goToXYAndPrintColorText(resume_P, RESUME_TEXT, COLOR_LIGHT_BLUE);
 
-				goToXYAndPrintColorText(exit_P, exit_Text);
-				choice = resume_Text;
+				goToXYAndPrintColorText(exit_P, EXIT_TEXT);
+				menu.choice = RESUME_TEXT;
 			}
 		}
 	}
-	if (choice == resume_Text) {
+	if (menu.choice == RESUME_TEXT) {
 		// continue game
-		deleteBox(row, column);
+		deleteBox(boxHeight, boxWidth);
 		continueGame();
 	}
-	else if (choice == exit_Text) {
-		isContinued = false;
+	else if (menu.choice == EXIT_TEXT) {
+		PLAYING_STATE = false;
 	}
-	return isContinued;
 }
 
 void pauseGame(HANDLE t) {
@@ -731,44 +761,38 @@ void MoveUp()
 }
 
 void ThreadFunc() {
-	while (true) {
-		if (STATE == LIVE) {
-			deleteTail();
-			switch (MOVING)
-			{
-			case 'A':
-				CHAR_LOCK = 'D';
-				MoveLeft();
-				break;
-			case 'D':
-				CHAR_LOCK = 'A';
-				MoveRight();
-				break;
-			case 'W':
-				CHAR_LOCK = 'S';
-				MoveUp();
-				break;
-			case 'S':
-				CHAR_LOCK = 'W';
-				MoveDown();
-				break;
-			}
-			processGate();
-			if (WIN == 9) {
-				system("cls");
-				printWinnerBanner();
-			}
-			else
-				drawSnake();
-			Sleep(300 / SPEED);
+	while (STATE == LIVE) {
+		deleteTail();
+		switch (MOVING)
+		{
+		case LEFT_KEY:
+			CHAR_LOCK = RIGHT_KEY;
+			MoveLeft();
+			break;
+		case RIGHT_KEY:
+			CHAR_LOCK = LEFT_KEY;
+			MoveRight();
+			break;
+		case UP_KEY:
+			CHAR_LOCK = DOWN_KEY;
+			MoveUp();
+			break;
+		case DOWN_KEY:
+			CHAR_LOCK = UP_KEY;
+			MoveDown();
+			break;
 		}
-		else {			
-			if (!continueMenu()) {
-				system("cls");
-				exit(0);
-			}
+		processGate();
+		if (WIN == MAX_ROUND) {
+			system("cls");
+			printWinnerBanner();
 		}
+		else
+			drawSnake();
+		Sleep(300 / SPEED);
 	}
+	if(STATE == DEAD)
+		continueMenu();
 }
 
 
