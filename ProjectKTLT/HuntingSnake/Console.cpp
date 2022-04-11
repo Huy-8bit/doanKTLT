@@ -414,8 +414,8 @@ void drawBorderForSaveLoadBox(int x, int y, int width, int height) {
 
 void randomPositionOfGate() {
 	do {
-		gateP.x = rand() % (BORDER_WIDTH - 4) + 2;
-		gateP.y = rand() % (BORDER_HEIGH - 4) + 3;
+		gateP.x = rand() % (BORDER_WIDTH - 10) + 2;
+		gateP.y = rand() % (BORDER_HEIGH - 10) + 3;
 	} while (!isValid(gateP.x, gateP.y) || !isValid(gateP.x - 1, gateP.y) || !isValid(gateP.x + 1, gateP.y)
 		|| !isValid(gateP.x - 1, gateP.y - 1) || !isValid(gateP.x + 1, gateP.y - 1));
 }

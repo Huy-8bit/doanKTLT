@@ -360,7 +360,7 @@ void processGate() {
 }
 
 //Xu ly top 5 HIGH LENGTH
-bool IsEmptyHighLengthFile() {
+bool isEmptyHighLengthFile() {
 	ifstream ifs;
 	string name;
 	int length;
@@ -390,8 +390,7 @@ void SaveHighLength()
 	fo.close();
 }
 
-void ResetHighLength()
-{
+void ResetHighLength() {
 	for (int i = 0; i < 5; i++) {
 		HighLength[i].name = "[NONE]";
 		HighLength[i].length = 4;
@@ -400,7 +399,7 @@ void ResetHighLength()
 }
 
 void initializeHighLength() {
-	if (!IsEmptyHighLengthFile()) {
+	if (!isEmptyHighLengthFile()) {
 		string name;
 		int length;
 

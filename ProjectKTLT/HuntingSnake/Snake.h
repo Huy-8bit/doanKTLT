@@ -109,7 +109,7 @@ void MoveUp();
 
 void ThreadFunc();
 
-bool IsEmptyHighLengthFile();
+bool isEmptyHighLengthFile();
 void SaveHighLength();
 void ResetHighLength();
 void initializeHighLength();
