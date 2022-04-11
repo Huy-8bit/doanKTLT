@@ -75,6 +75,9 @@ void turnMusic(int index) {
 	case LOADING_SOUND:
 		PlaySound(TEXT(".\\Sound\\LoadGame.wav"), NULL, SND_LOOP | SND_ASYNC);
 		break;
+	case STARTING_SOUND:
+		PlaySound(TEXT(".\\Sound\\StartGame.wav"), NULL, SND_ASYNC);
+		break;
 	default:
 		PlaySound(NULL, 0, 0);
 		break;
@@ -178,6 +181,55 @@ void printSavingBanner() {
 		cout << "_";
 		GotoXY(dotP.x + i * 4, dotP.y + 1);
 		cout << "(_)";
+	}
+
+	turnMusic(0);
+
+	// delete banner
+	clearScreen();
+}
+
+void printStartingBanner() {
+	int logo_X = (BORDER_WIDTH / 2) - 18;
+	int logo_Y = (BORDER_HEIGH / 2) - 2;
+
+	const int logoLength = 4;
+	string logo[logoLength] = {
+					"  ___ _            _   ",
+					" / __| |_ __ _ _ _| |_ ",
+					" \\__ \\  _/ _` | '_|  _|",
+					" |___/\\__\\__,_|_|  \\__|"				
+	};
+	string index[12] = {
+		"  ____",
+		" |__ /",
+		"  |_ \\",
+		" |___/",
+		"  ___ ", 
+		" |_  )",
+		"  / / ",
+		" /___|", 
+		"  _ ",
+		" / |", 
+		" | |",
+		" |_|"};
+	POINT indexP = { logo_X + 16 , logo_Y };
+
+	if (HAS_MUSIC)
+		turnMusic(STARTING_SOUND);
+	// use for loop to print logo "START"
+	for (int i = 0; i < logoLength; i++) {
+		goToXYAndPrintColorText(logo_X, logo_Y + i, logo[i]);
+	}
+	Sleep(250);
+	clearScreen();
+
+	for (int i = 1; i < 4; i++) {
+		for (int j = (i - 1) * 4; j < 4 * i; j++) {
+			goToXYAndPrintColorText(indexP.x, indexP.y + j - 4 * (i - 1), index[j]);
+		}
+		Sleep(1000);
+		clearScreen();
 	}
 
 	turnMusic(0);

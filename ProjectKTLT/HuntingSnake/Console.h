@@ -24,6 +24,7 @@ using namespace std;
 #define DEAD_MUSIC				3
 #define TYPE_KEY_SOUND			4
 #define LOADING_SOUND			5
+#define STARTING_SOUND			6
 
 // VALUE FOR STATE
 #define LIVE					1
@@ -85,12 +86,11 @@ void FixConsoleWindow();
 
 void turnMusic(int index);
 
+// PRINT BANNER AND LOGO
 void printGameLogo();
-
 void printLoadingBanner();
-
 void printSavingBanner();
-
+void printStartingBanner();
 void printWinnerBanner();
 
 void drawBoard(int x, int y, int width, int height);

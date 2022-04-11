@@ -574,6 +574,8 @@ void startGame() {
 
 	drawBoard(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGH);
 
+	printStartingBanner();
+
 	turnMusic(0);
 }
 
