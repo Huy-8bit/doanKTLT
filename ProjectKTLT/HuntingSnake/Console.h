@@ -62,8 +62,8 @@ using namespace std;
 #define RESUME_TEXT				"Resume"
 #define RESTART_TEXT			"Restart"
 #define CANCEL_TEXT				"Cancel"
-#define LENGTH_TEXT				"LENGTH"
-#define ROUND_TEXT				"ROUND"
+#define SCORE_TEXT				"SCORE"
+#define LEVEL_TEXT				"LEVEL"
 
 
 extern int CONSOLE_HEIGH;
@@ -92,6 +92,7 @@ void printLoadingBanner();
 void printSavingBanner();
 void printStartingBanner();
 void printWinnerBanner();
+void printLevelUpBanner();
 
 void drawBoard(int x, int y, int width, int height);
 

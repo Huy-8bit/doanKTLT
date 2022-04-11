@@ -238,6 +238,64 @@ void printStartingBanner() {
 	clearScreen();
 }
 
+void printLevelUpBanner() {
+	int logo_X = (BORDER_WIDTH / 2) - 16;
+	int logo_Y = (BORDER_HEIGH / 2) - 5;
+
+	const int logoLength = 5;
+	string logo[logoLength] = {
+					"  _                _             ",
+					" | |   _____ _____| |  _  _ _ __ ",
+					" | |__/ -_) V / -_) | | || | '_ \\",
+					" |____\\___|\\_/\\___|_|  \\_,_| .__/",
+					"                           |_|   "
+	};
+	/*
+	string level[4 * MAX_LEVEL] = {
+		"  _ ",
+		" / |",
+		" | |",
+		" |_|", 
+		"  ___ ",
+		" |_  )",
+		"  / / ",
+		" /___|",
+		"  ____",
+		" |__ /",
+		"  |_ \\",
+		" |___/",
+		"  _ _  ",
+		" | | | ",
+		" |_  _|",
+		"   |_| ",
+		"  ___ ",
+		" | __|",
+		"|__ \\",
+		" |___/",
+		"   __ ",
+		"  / / ", 
+		" / _ \\",
+		" \\___/",
+		"  ____ ",
+		" |__  |",
+		"   / / ",
+		"  /_/  "
+		 };
+		 */
+	//POINT levelNumP = { logo_X + 16 , logo_Y + 2 };
+	
+	// use for loop to print logo "LEVEL UP"
+	for (int i = 0; i < logoLength; i++) {
+		goToXYAndPrintColorText(logo_X, logo_Y + i, logo[i]);
+	}
+
+	if (HAS_MUSIC)
+		turnMusic(LEVEL_UP_MUSIC);
+
+	// delete banner
+	clearScreen();
+}
+
 void printWinnerBanner() {
 	int xwinner = (CONSOLE_WIDTH / 2) - 12;
 	int ywinner = (CONSOLE_HEIGH / 2) - 3;
@@ -285,16 +343,16 @@ void drawBoard(int x, int y, int width, int height) {
 
 	POINT lengthTextPos = { BORDER_WIDTH + leftMargin + 4, topMargin };
 	POINT roundTextPos = { BORDER_WIDTH + leftMargin + 5, topMargin + 2 };
-	LENGTH_VALUE_POS = { lengthTextPos.x + (int)strlen(LENGTH_TEXT) + 2, lengthTextPos.y };
-	ROUND_VALUE_POS = { roundTextPos.x + (int)strlen(ROUND_TEXT) + 2, roundTextPos.y };
+	LENGTH_VALUE_POS = { lengthTextPos.x + (int)strlen(SCORE_TEXT) + 2, lengthTextPos.y };
+	ROUND_VALUE_POS = { roundTextPos.x + (int)strlen(LEVEL_TEXT) + 2, roundTextPos.y };
 
 	GotoXY(lengthTextPos);
-	cout << LENGTH_TEXT << "  ";
+	cout << SCORE_TEXT << "  ";
 	GotoXY(LENGTH_VALUE_POS);
 	cout << SNAKE_SIZE;
 
 	GotoXY(roundTextPos);
-	cout << ROUND_TEXT << "  ";
+	cout << LEVEL_TEXT << "  ";
 	GotoXY(ROUND_VALUE_POS);
 	cout << ROUND;
 
@@ -305,7 +363,7 @@ void drawBoard(int x, int y, int width, int height) {
 	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 12 });
 	cout << "[" << (char)LOAD_KEY << "]    LOAD";
 	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 13 });
-	cout << "[ESC]  EXIT GAME";
+	cout << "[ESC]  MAIN MENU";
 
 	
 	int guideLine = 20;

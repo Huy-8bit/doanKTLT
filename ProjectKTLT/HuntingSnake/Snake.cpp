@@ -350,18 +350,17 @@ void processGate() {
 			snake[i].x = gateP.x;
 			snake[i].y = gateP.y;
 		}
-
+		
+		//snake[SNAKE_SIZE - 1] = { BORDER_WIDTH / 2 - 2, BORDER_HEIGH / 2 };
 		snake[SNAKE_SIZE - 1].x = gateP.x;
 		snake[SNAKE_SIZE - 1].y = gateP.y + 1;
-		if (HAS_MUSIC) {
-			turnMusic(LEVEL_UP_MUSIC);
-		}
+		
+		printLevelUpBanner();
 	}
 }
 
 //Xu ly top 5 HIGH LENGTH
-bool IsEmptyHighLengthFile()
-{
+bool IsEmptyHighLengthFile() {
 	ifstream ifs;
 	string name;
 	int length;
@@ -393,8 +392,7 @@ void SaveHighLength()
 
 void ResetHighLength()
 {
-	for (int i = 0; i < 5; i++)
-	{
+	for (int i = 0; i < 5; i++) {
 		HighLength[i].name = "[NONE]";
 		HighLength[i].length = 4;
 	}
@@ -785,7 +783,7 @@ void ThreadFunc() {
 			break;
 		}
 		processGate();
-		if (WIN == MAX_ROUND) {
+		if (WIN == MAX_LEVEL) {
 			system("cls");
 			printWinnerBanner();
 		}
