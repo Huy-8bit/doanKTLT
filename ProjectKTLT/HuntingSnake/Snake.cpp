@@ -20,13 +20,12 @@ int FOOD_INDEX;
 POINT gateP;
 
 // GAME
-int ROUND;
+int LEVEL;
 bool GATE_EXIST;
-int WIN;
-bool PLAYING_STATE;
+//int WIN;
+int PLAYING_STATE;
 
 //handle crash and effect 
-
 bool crashGate() {
 	POINT head = { snake[SNAKE_SIZE - 1].x, snake[SNAKE_SIZE - 1].y };
 	return (head.x == gateP.x + 1 && head.y == gateP.y) || (head.x == gateP.x - 1 && head.y == gateP.y - 1)
@@ -35,9 +34,9 @@ bool crashGate() {
 }
 
 bool crashWall() {
-	return (snake[SNAKE_SIZE - 1].x + 1 == BORDER_WIDTH + 1
+	return (snake[SNAKE_SIZE - 1].x == borderWidth
 		|| snake[SNAKE_SIZE - 1].x == 0
-		|| snake[SNAKE_SIZE - 1].y + 1 == BORDER_HEIGH
+		|| snake[SNAKE_SIZE - 1].y + 1 == borderHeigh
 		|| snake[SNAKE_SIZE - 1].y == 0);
 }
 
@@ -73,7 +72,7 @@ MENU mainMenu() {
 
 	int selectingLine = 0;
 	int SELECTING_COLOR = COLOR_LIGHT_BLUE;
-	POINT MENU_P{ (CONSOLE_WIDTH / 2) - 5, (CONSOLE_HEIGH / 2) + 3 };
+	POINT MENU_P{ (consoleWidth / 2) - 5, (consoleHeigh / 2) + 3 };
 
 	if (HAS_MUSIC)
 		turnMusic(MENU_MUSIC);
@@ -126,27 +125,28 @@ void handleMainMenu() {
 			switch (chooseMenu.mode)
 			{				
 			case NEW_GAME_MODE:				
-				STATE = LIVE;
-				PLAYING_STATE = true;
+				PLAYING_STATE = RUNNING_STATE;
 				return;
 
 			case LOAD_GAME_MODE:				
 				loadMenu();	
-				STATE = LIVE;
-				PLAYING_STATE = true;
+				PLAYING_STATE = LOADING_STATE;
 				system("cls");
 				return;
 
 			case HIGH_SCORE_MODE:				
-				showHighLength();			
+				showHighScore();	
+				PLAYING_STATE = WAITING_STATE;
 				break;
 
 			case SETTING_MODE:
-				settingMenu();				
+				PLAYING_STATE = WAITING_STATE;
+				settingMenu();		
 				break;
 
 			case EXIT_GAME_MODE:
-				exit(0);
+				PLAYING_STATE = EXIT_STATE;
+				break;
 
 			default:
 				break;
@@ -160,13 +160,15 @@ void continueGame() {
 	if (GATE_EXIST) {
 		drawGate();
 	}
+	else {
+		drawFood();
+	}
 	drawSnake();
-	drawFood();
-
+	
 	displaySnakeSize();
-	displayRoundNumber();
+	displayLevel();
 
-	PLAYING_STATE = true;
+	PLAYING_STATE = RUNNING_STATE;
 	STATE = LIVE;
 }
 
@@ -174,8 +176,8 @@ void continueMenu() {
 
 	int boxWidth = 34;
 	int boxHeight = 8;
-	int game_X = (BORDER_WIDTH - boxWidth) / 2;
-	int game_Y = (BORDER_HEIGH - boxHeight) / 2;
+	int game_X = (borderWidth - boxWidth) / 2;
+	int game_Y = (borderHeigh - boxHeight) / 2;
 	POINT GAME_P = { game_X, game_Y };
 	MENU select;
 
@@ -219,9 +221,9 @@ void continueMenu() {
 		}
 	}
 	if (select.choice == RESTART_TEXT)
-		PLAYING_STATE = true;
+		PLAYING_STATE = RUNNING_STATE;
 	else if (select.choice == CANCEL_TEXT)
-		PLAYING_STATE = false;
+		PLAYING_STATE = WAITING_STATE;
 }
 
 void settingMenu() {
@@ -231,13 +233,13 @@ void settingMenu() {
 	int game_X;
 	int game_Y;
 	
-	if (PLAYING_STATE) {
-		game_X = (BORDER_WIDTH - boxWidth) / 2;
-		game_Y = (BORDER_HEIGH - boxHeight) / 2;
+	if (PLAYING_STATE == SETTING_STATE) {
+		game_X = (consoleWidth - boxWidth) / 2;
+		game_Y = (consoleHeigh - boxHeight) / 2;		
 	}
 	else {
-		game_X = (CONSOLE_WIDTH - boxWidth) / 2;
-		game_Y = (CONSOLE_HEIGH - boxHeight) / 2;
+		game_X = (borderWidth - boxWidth) / 2;
+		game_Y = (borderHeigh - boxHeight) / 2;
 	}
 	
 	POINT outlineP = { game_X, game_Y };
@@ -248,7 +250,7 @@ void settingMenu() {
 	string text[4] = { "SETTING", "Background music:  ON", "Return", "Background music: OFF" };
 
 	int choice = 1;
-	bool state = true;
+	bool state = HAS_MUSIC;
 
 	GotoXY(chooseP.x + 10, chooseP.y);
 	cout << text[0];
@@ -326,32 +328,35 @@ void deleteTail() {
 
 //Xu ly nguyen do dai snake va khi an xong food o mot cap
 void processGate() {
-	if (!GATE_EXIST)
+	if (GATE_EXIST) {
+		if (snake[SNAKE_SIZE - 1].x == gateP.x &&
+			snake[SNAKE_SIZE - 1].y == gateP.y &&
+			CHAR_LOCK == UP_KEY) {
+			SNAKE_SIZE--;
+			SIZE_PLUS++;
+		}
+	}	
+	else {
 		drawFood();
-
-	if (snake[SNAKE_SIZE - 1].x == gateP.x && snake[SNAKE_SIZE - 1].y == gateP.y && GATE_EXIST && CHAR_LOCK == UP_KEY) {
-		SNAKE_SIZE--;
-		SIZE_PLUS++;
 	}
 
-	displayRoundNumber();
+	displayLevel();
 
 	if (SNAKE_SIZE == 0) {
 		deleteGate();
+		GATE_EXIST = false;
 
 		// Level up
-		WIN++;
-		ROUND++;
+		LEVEL++;
 		SPEED++;
-		SNAKE_SIZE = 4 * ROUND;
+		SNAKE_SIZE = 4 * LEVEL;
 		SIZE_PLUS = 0;
 
 		for (int i = 0; i < SNAKE_SIZE; i++) {
 			snake[i].x = gateP.x;
 			snake[i].y = gateP.y;
 		}
-		
-		//snake[SNAKE_SIZE - 1] = { BORDER_WIDTH / 2 - 2, BORDER_HEIGH / 2 };
+				
 		snake[SNAKE_SIZE - 1].x = gateP.x;
 		snake[SNAKE_SIZE - 1].y = gateP.y + 1;
 		
@@ -366,8 +371,7 @@ bool isEmptyHighLengthFile() {
 	int length;
 
 	ifs.open(".\\Data\\highlength.txt");
-	if (ifs >> name >> length)
-	{
+	if (ifs >> name >> length) {
 		ifs.close();
 		return false;
 	}
@@ -376,52 +380,50 @@ bool isEmptyHighLengthFile() {
 	return true;
 }
 
-void SaveHighLength()
-{
+void saveHighScore() {
 	remove(".\\Data\\highlength.txt");
 
-	ofstream fo;
-	fo.open(".\\Data\\highlength.txt");
+	ofstream ofs;
+	ofs.open(".\\Data\\highlength.txt");
 
 	for (int i = 0; i < 4; i++)
-		fo << HighLength[i].name << " " << HighLength[i].length << endl;
-	fo << HighLength[4].name << " " << HighLength[4].length;
+		ofs << HighLength[i].name << " " << HighLength[i].length << endl;
+	ofs << HighLength[4].name << " " << HighLength[4].length;
 
-	fo.close();
+	ofs.close();
 }
 
-void ResetHighLength() {
+void resetHighScore() {
 	for (int i = 0; i < 5; i++) {
 		HighLength[i].name = "[NONE]";
 		HighLength[i].length = 4;
 	}
-	SaveHighLength();
+	saveHighScore();
 }
 
-void initializeHighLength() {
+void initializeHighScore() {
 	if (!isEmptyHighLengthFile()) {
 		string name;
 		int length;
 
-		ifstream fi;
-		fi.open(".\\Data\\highlength.txt");
+		ifstream ifs;
+		ifs.open(".\\Data\\highlength.txt");
 
 		int i = 0;
 
-		while (fi >> name >> length)
-		{
+		while (ifs >> name >> length) {
 			HighLength[i].name = name;
 			HighLength[i].length = length;
 			i++;
 		}
 
-		fi.close();
+		ifs.close();
 	}
 	else
-		ResetHighLength();
+		resetHighScore();
 }
 
-void CreateNewHighLength()
+void createNewHighScore()
 {
 	int minLength = HighLength[0].length;
 	int index = 0;
@@ -447,23 +449,22 @@ void CreateNewHighLength()
 	}
 }
 
-void SortHighLength() {
+void sortHighScore() {
 	for (int i = 0; i < 4; i++)
 		for (int j = i + 1; j < 5; j++)
-			if (HighLength[i].length < HighLength[j].length)
-			{
+			if (HighLength[i].length < HighLength[j].length) {
 				string name = HighLength[i].name;
 				HighLength[i].name = HighLength[j].name;
 				HighLength[j].name = name;
 
-				int length = HighLength[i].length;
+				int score = HighLength[i].length;
 				HighLength[i].length = HighLength[j].length;
-				HighLength[j].length = length;
+				HighLength[j].length = score;
 			}
-	SaveHighLength();
+	saveHighScore();
 }
 
-void showHighLength() {
+void showHighScore() {
 	ifstream ifs;
 	ifs.open(".\\Data\\highlength.txt");
 
@@ -474,14 +475,12 @@ void showHighLength() {
 
 	int column = 31;
 	int row = 9;
-	int xHighLength = (CONSOLE_WIDTH / 2) - 15;
-	int yHighLength = (CONSOLE_HEIGH / 2) - 4;
+	int xHighLength = (consoleWidth / 2) - 15;
+	int yHighLength = (consoleHeigh / 2) - 4;
 
-	for (int j = 0; j < row; j++)
-	{
+	for (int j = 0; j < row; j++) {
 		GotoXY(POINT{ xHighLength, yHighLength + j });
-		for (int k = 0; k < column; k++)
-		{
+		for (int k = 0; k < column; k++) {
 			if (j == 0)
 				cout << (unsigned char)220;
 			else if (j == 2 && k != 0 && k != column - 1)
@@ -495,15 +494,13 @@ void showHighLength() {
 		}
 	}
 
-	while (true)
-	{
+	while (true) {
 		GotoXY(POINT{ xHighLength + 10, yHighLength + 1 });
 		cout << "HIGH LENGTH";
 
 		int i = 0;
 
-		while (ifs >> name >> length)
-		{
+		while (ifs >> name >> length) {
 			GotoXY(POINT{ xHighLength + 4, yHighLength + i + 3 });
 			cout << "#" << i + 1 << ". ";
 			GotoXY(POINT{ xHighLength + 8, yHighLength + i + 3 });
@@ -526,10 +523,10 @@ void initialGame() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-	CONSOLE_WIDTH = csbi.srWindow.Right - csbi.srWindow.Left;
-	BORDER_WIDTH = CONSOLE_WIDTH - 25;
-	CONSOLE_HEIGH = csbi.srWindow.Bottom - csbi.srWindow.Top;
-	BORDER_HEIGH = CONSOLE_HEIGH;
+	consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left;
+	borderWidth = consoleWidth - 25;
+	consoleHeigh = csbi.srWindow.Bottom - csbi.srWindow.Top;
+	borderHeigh = consoleHeigh;
 
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO info;
@@ -538,7 +535,7 @@ void initialGame() {
 	SetConsoleCursorInfo(consoleHandle, &info);
 
 	STATE = DEAD;
-	PLAYING_STATE = false;
+	PLAYING_STATE = WAITING_STATE;
 	HAS_MUSIC = true;
 }
 
@@ -550,28 +547,41 @@ bool isValid(int x, int y) {
 }
 
 void resetData() {
-	WIN = 0;
-	ROUND = 1;
+	LEVEL = 1;
 	GATE_EXIST = false;
 	INDEX_ID = 4;
 	CHAR_LOCK = LEFT_KEY, MOVING = RIGHT_KEY, SPEED = 1; FOOD_INDEX = 0, SNAKE_SIZE = 4;
 	SIZE_PLUS = 0;
 
 	for (int i = 0; i < SNAKE_SIZE; i++) {
-		snake[i] = { BORDER_WIDTH / 2 - 2 + i, BORDER_HEIGH / 2 };
+		snake[i] = { borderWidth / 2 - 2 + i, borderHeigh / 2 };
 	}
 
+	STATE = LIVE;
+
 	generateFood();
+}
+
+void startNewGame() {
+	system("cls");
+
+	resetData();
+
+	drawBoard(0, 0, consoleWidth, consoleHeigh);
+
+	printStartingBanner();
+
+	turnMusic(0);
 }
 
 void startGame() {
 	system("cls");
 
-	resetData();
-
-	drawBoard(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGH);
+	drawBoard(0, 0, consoleWidth, consoleHeigh);
 
 	printStartingBanner();
+
+	continueGame();
 
 	turnMusic(0);
 }
@@ -588,8 +598,8 @@ void pauseMenu() {
 	int boxHeight = 8;
 	MENU menu;
 	
-	int game_X = (BORDER_WIDTH - boxWidth) / 2;
-	int game_Y = (BORDER_HEIGH - boxHeight) / 2;
+	int game_X = (borderWidth - boxWidth) / 2;
+	int game_Y = (borderHeigh - boxHeight) / 2;
 	POINT GAME_P = { game_X, game_Y };
 	POINT pausing_P = { GAME_P.x + 14, GAME_P.y + 2 };
 	POINT resume_P = { GAME_P.x + 8, GAME_P.y + 4 };
@@ -635,7 +645,7 @@ void pauseMenu() {
 		continueGame();
 	}
 	else if (menu.choice == EXIT_TEXT) {
-		PLAYING_STATE = false;
+		PLAYING_STATE = WAITING_STATE;
 	}
 }
 
@@ -656,8 +666,8 @@ void generateFood() {
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < MAX_FOOD_AMOUNT; i++) {
 		do {
-			x = rand() % (BORDER_WIDTH - 2) + 1;
-			y = rand() % (BORDER_HEIGH - 2) + 1;
+			x = rand() % (borderWidth - 2) + 1;
+			y = rand() % (borderHeigh - 2) + 1;
 		} while (!isValid(x, y));
 		food[i] = { x, y };
 	}
@@ -671,7 +681,9 @@ void eat() {
 	displaySnakeSize();
 	
 	if (FOOD_INDEX == MAX_FOOD_AMOUNT - 1) {
+		randomPositionOfGate();
 		drawGate();
+		GATE_EXIST = true;
 		FOOD_INDEX = 0;
 		generateFood();
 	}
@@ -684,8 +696,7 @@ void MoveRight() {
 		processDead();
 	}
 	else {
-		if (snake[SNAKE_SIZE - 1].x + 1 == food[FOOD_INDEX].x && snake[SNAKE_SIZE - 1].y == food[FOOD_INDEX].y)
-		{
+		if (snake[SNAKE_SIZE - 1].x + 1 == food[FOOD_INDEX].x && snake[SNAKE_SIZE - 1].y == food[FOOD_INDEX].y) {
 			eat();
 		}
 		for (int i = 0; i < SNAKE_SIZE - 1; i++) {
@@ -782,7 +793,7 @@ void ThreadFunc() {
 			break;
 		}
 		processGate();
-		if (WIN == MAX_LEVEL) {
+		if (LEVEL - 1 == MAX_LEVEL) {
 			system("cls");
 			printWinnerBanner();
 		}

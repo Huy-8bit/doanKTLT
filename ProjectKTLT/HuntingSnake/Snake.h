@@ -55,10 +55,9 @@ extern POINT food[4];
 extern int FOOD_INDEX;
 
 // GAME
-extern int ROUND;
+extern int LEVEL;
 extern bool GATE_EXIST;
-extern int WIN;
-extern bool PLAYING_STATE;
+extern int PLAYING_STATE;
 
 //PROTOTYPE
 MENU mainMenu();
@@ -75,6 +74,7 @@ void generateFood();
 
 void resetData();
 
+void startNewGame();
 void startGame();
 
 void exitGame(thread& t);
@@ -110,12 +110,12 @@ void MoveUp();
 void ThreadFunc();
 
 bool isEmptyHighLengthFile();
-void SaveHighLength();
-void ResetHighLength();
-void initializeHighLength();
-void CreateNewHighLength();
-void SortHighLength();
-void showHighLength();
+void saveHighScore();
+void resetHighScore();
+void initializeHighScore();
+void createNewHighScore();
+void sortHighScore();
+void showHighScore();
 
 void initialGame();
 

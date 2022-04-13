@@ -1,12 +1,12 @@
 #include "Console.h"
 
-int CONSOLE_HEIGH;
-int CONSOLE_WIDTH;
-int BORDER_HEIGH;
-int BORDER_WIDTH;
+int consoleHeigh;
+int consoleWidth;
+int borderHeigh;
+int borderWidth;
 
 POINT LENGTH_VALUE_POS;
-POINT ROUND_VALUE_POS;
+POINT LEVEL_VALUE_POS;
 bool HAS_MUSIC;
 
 int pressedKey;
@@ -85,8 +85,8 @@ void turnMusic(int index) {
 }
 
 void printGameLogo() {
-	int logo_X = (CONSOLE_WIDTH / 2) - 20;
-	int logo_Y = (CONSOLE_HEIGH / 2) - 8;
+	int logo_X = (consoleWidth / 2) - 20;
+	int logo_Y = (consoleHeigh / 2) - 8;
 
 	const int logoLength = 6;
 	string logo[logoLength] = {
@@ -112,13 +112,13 @@ void printLoadingBanner() {
 	int logo_X;
 	int logo_Y;
 
-	if (PLAYING_STATE) {
-		logo_X = (BORDER_WIDTH / 2) - 25;
-		logo_Y = (BORDER_HEIGH / 2) - 2;
+	if (PLAYING_STATE == LOADING_STATE) {
+		logo_X = (borderWidth / 2) - 25;
+		logo_Y = (borderHeigh / 2) - 2;
 	}
 	else {
-		logo_X = (CONSOLE_WIDTH / 2) - 25;
-		logo_Y = (CONSOLE_HEIGH / 2) - 2;
+		logo_X = (consoleWidth / 2) - 25;
+		logo_Y = (consoleHeigh / 2) - 2;
 	}
 
 	const int logoLength = 5;
@@ -154,8 +154,8 @@ void printLoadingBanner() {
 }
 
 void printSavingBanner() {
-	int logo_X = (BORDER_WIDTH / 2) - 22;
-	int logo_Y = (BORDER_HEIGH / 2) - 2;
+	int logo_X = (borderWidth / 2) - 22;
+	int logo_Y = (borderHeigh / 2) - 2;
 
 	const int logoLength = 5;
 	string logo[logoLength] = {
@@ -190,8 +190,8 @@ void printSavingBanner() {
 }
 
 void printStartingBanner() {
-	int logo_X = (BORDER_WIDTH / 2) - 18;
-	int logo_Y = (BORDER_HEIGH / 2) - 2;
+	int logo_X = (borderWidth / 2) - 18;
+	int logo_Y = (borderHeigh / 2) - 2;
 
 	const int logoLength = 4;
 	string logo[logoLength] = {
@@ -239,8 +239,8 @@ void printStartingBanner() {
 }
 
 void printLevelUpBanner() {
-	int logo_X = (BORDER_WIDTH / 2) - 16;
-	int logo_Y = (BORDER_HEIGH / 2) - 5;
+	int logo_X = (borderWidth / 2) - 16;
+	int logo_Y = (borderHeigh / 2) - 5;
 
 	const int logoLength = 5;
 	string logo[logoLength] = {
@@ -297,8 +297,8 @@ void printLevelUpBanner() {
 }
 
 void printWinnerBanner() {
-	int xwinner = (CONSOLE_WIDTH / 2) - 12;
-	int ywinner = (CONSOLE_HEIGH / 2) - 3;
+	int xwinner = (consoleWidth / 2) - 12;
+	int ywinner = (consoleHeigh / 2) - 3;
 	system("cls");
 	int n = 1;
 	string banner[6]{ " __          __  _____   _   _ ",
@@ -307,10 +307,8 @@ void printWinnerBanner() {
 					 "   \\ \\/  \\/ /     | |   | . ` |",
 					 "    \\  /\\  /     _| |_  | |\\  |",
 					 "     \\/  \\/     |_____| |_| \\_|" };
-	while (true)
-	{
+	while (true) {
 		for (int i = 0; i < 6; i++) {
-			//GotoXY(POINT{ xwinner, ywinner + i });
 			goToXYAndPrintColorText(POINT{ xwinner, ywinner + i }, banner[i], i + 1);
 		}
 		n++;
@@ -336,47 +334,47 @@ void drawBoard(int x, int y, int width, int height) {
 		cout << (unsigned char)219;
 		GotoXY(x, i );
 		cout << (unsigned char)219;
-		GotoXY(BORDER_WIDTH, i);
+		GotoXY(borderWidth, i);
 		cout << (unsigned char)219;
 		Sleep(5);
 	}
 
-	POINT lengthTextPos = { BORDER_WIDTH + leftMargin + 4, topMargin };
-	POINT roundTextPos = { BORDER_WIDTH + leftMargin + 5, topMargin + 2 };
+	POINT lengthTextPos = { borderWidth + leftMargin + 4, topMargin };
+	POINT levelTextPos = { borderWidth + leftMargin + 4, topMargin + 2 };
 	LENGTH_VALUE_POS = { lengthTextPos.x + (int)strlen(SCORE_TEXT) + 2, lengthTextPos.y };
-	ROUND_VALUE_POS = { roundTextPos.x + (int)strlen(LEVEL_TEXT) + 2, roundTextPos.y };
+	LEVEL_VALUE_POS = { levelTextPos.x + (int)strlen(LEVEL_TEXT) + 2, levelTextPos.y };
 
 	GotoXY(lengthTextPos);
 	cout << SCORE_TEXT << "  ";
 	GotoXY(LENGTH_VALUE_POS);
 	cout << SNAKE_SIZE;
 
-	GotoXY(roundTextPos);
+	GotoXY(levelTextPos);
 	cout << LEVEL_TEXT << "  ";
-	GotoXY(ROUND_VALUE_POS);
-	cout << ROUND;
+	GotoXY(LEVEL_VALUE_POS);
+	cout << LEVEL;
 
-	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 10 });
+	GotoXY(POINT{ borderWidth + leftMargin, 10 });
 	cout << "[" << (char)PAUSE_KEY << "]    PAUSE";
-	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 11 });
+	GotoXY(POINT{ borderWidth + leftMargin, 11 });
 	cout << "[" << (char)SAVE_KEY << "]    SAVE";
-	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 12 });
+	GotoXY(POINT{ borderWidth + leftMargin, 12 });
 	cout << "[" << (char)LOAD_KEY << "]    LOAD";
-	GotoXY(POINT{ BORDER_WIDTH + leftMargin, 13 });
+	GotoXY(POINT{ borderWidth + leftMargin, 13 });
 	cout << "[ESC]  MAIN MENU";
 
 	
 	int guideLine = 20;
 	// Guide Line
-	GotoXY(BORDER_WIDTH + leftMargin + 2, guideLine);
+	GotoXY(borderWidth + leftMargin + 2, guideLine);
 	cout << "GUIDE PLAYER";
-	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
+	GotoXY(borderWidth + leftMargin, ++guideLine);
 	cout << "[" << (char)UP_KEY << "]  MOVE UP";
-	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
+	GotoXY(borderWidth + leftMargin, ++guideLine);
 	cout << "[" << (char)DOWN_KEY << "]  MOVE DOWN";
-	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
+	GotoXY(borderWidth + leftMargin, ++guideLine);
 	cout << "[" << (char)LEFT_KEY << "]  MOVE LEFT";
-	GotoXY(BORDER_WIDTH + leftMargin, ++guideLine);
+	GotoXY(borderWidth + leftMargin, ++guideLine);
 	cout << "[" << (char)RIGHT_KEY << "]  MOVE RIGHT";
 }
 
@@ -414,16 +412,13 @@ void drawBorderForSaveLoadBox(int x, int y, int width, int height) {
 
 void randomPositionOfGate() {
 	do {
-		gateP.x = rand() % (BORDER_WIDTH - 10) + 2;
-		gateP.y = rand() % (BORDER_HEIGH - 10) + 3;
+		gateP.x = rand() % (borderWidth - 10) + 2;
+		gateP.y = rand() % (borderHeigh - 10) + 3;
 	} while (!isValid(gateP.x, gateP.y) || !isValid(gateP.x - 1, gateP.y) || !isValid(gateP.x + 1, gateP.y)
 		|| !isValid(gateP.x - 1, gateP.y - 1) || !isValid(gateP.x + 1, gateP.y - 1));
 }
 
 void drawGate() {
-
-	randomPositionOfGate();
-
 	GotoXY(POINT{ gateP.x + 1, gateP.y });
 	cout << (unsigned char)223;
 	GotoXY(POINT{ gateP.x - 1, gateP.y - 1 });
@@ -434,8 +429,6 @@ void drawGate() {
 	cout << (unsigned char)219;
 	GotoXY(POINT{ gateP.x - 1, gateP.y });
 	cout << (unsigned char)223;
-
-	GATE_EXIST = true;
 }
 
 void deleteGate() {
@@ -449,8 +442,6 @@ void deleteGate() {
 	cout << " ";
 	GotoXY(POINT{ gateP.x - 1, gateP.y });
 	cout << " ";
-
-	GATE_EXIST = false;
 }
 
 void displaySnakeSize() {
@@ -458,21 +449,23 @@ void displaySnakeSize() {
 	cout << SNAKE_SIZE;
 }
 
-void displayRoundNumber() {
-	GotoXY(ROUND_VALUE_POS);
-	cout << ROUND;
+void displayLevel() {
+	GotoXY(LEVEL_VALUE_POS);
+	cout << LEVEL;
 }
 
 void deleteBox(int height, int width) {
 	int xgame;
 	int ygame;
-	if (PLAYING_STATE) {
-		xgame = (BORDER_WIDTH - width) / 2;
-		ygame = (BORDER_HEIGH - height) / 2;
+	if (PLAYING_STATE == SAVING_STATE ||
+		PLAYING_STATE == LOADING_STATE ||
+		PLAYING_STATE == RUNNING_STATE) {
+		xgame = (borderWidth - width) / 2;
+		ygame = (borderHeigh - height) / 2;
 	}
 	else {
-		xgame = (CONSOLE_WIDTH - width) / 2;
-		ygame = (CONSOLE_HEIGH - height) / 2;
+		xgame = (consoleWidth - width) / 2;
+		ygame = (consoleHeigh - height) / 2;
 	}
 	 
 	for (int i = 0; i < height; i++) {
@@ -510,9 +503,9 @@ void clearScreen() {
 	int xgame = 1;
 	int ygame = 1;
 
-	for (int i = 0; i < BORDER_HEIGH - 2; i++) {
+	for (int i = 0; i < borderHeigh - 2; i++) {
 		GotoXY(POINT{ 1, 1 + i });
-		for (int j = 0; j < BORDER_WIDTH - 1; j++) {
+		for (int j = 0; j < borderWidth - 1; j++) {
 			cout << " ";
 		}
 	}

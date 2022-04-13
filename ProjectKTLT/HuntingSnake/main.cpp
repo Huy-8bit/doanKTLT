@@ -9,7 +9,7 @@ void controlInGame() {
 		pressedKey = toupper(_getch());
 		if (STATE == LIVE) {
 			// max level
-			if (WIN == MAX_ROUND) {
+			if (LEVEL - 1 == MAX_LEVEL) {
 				pauseGame(handle_t1);
 				break;
 			}
@@ -18,7 +18,7 @@ void controlInGame() {
 				pauseGame(handle_t1);
 				// if player want to stop game
 				pauseMenu();
-				if(!PLAYING_STATE)
+				if(PLAYING_STATE == WAITING_STATE)
 					break;
 				else 
 					ResumeThread(handle_t1);
@@ -26,12 +26,15 @@ void controlInGame() {
 			// Save game
 			else if (pressedKey == SAVE_KEY) {
 				pauseGame(handle_t1);
+				PLAYING_STATE = SAVING_STATE;
 				saveMenu();
+				continueGame();
 				ResumeThread(handle_t1);
 			}
 			// load game
 			else if (pressedKey == LOAD_KEY) {
 				pauseGame(handle_t1);
+				PLAYING_STATE = LOADING_STATE;
 				loadMenu();
 				continueGame();
 				ResumeThread(handle_t1);
@@ -39,8 +42,7 @@ void controlInGame() {
 			// exit game
 			else if (pressedKey == ESC_KEY) {
 				pauseGame(handle_t1);
-				PLAYING_STATE = false;
-				STATE = DEAD;
+				PLAYING_STATE = WAITING_STATE;
 				break;
 			}
 			else {
@@ -62,23 +64,37 @@ void controlInGame() {
 
 int main() {
 	initialGame();
-	initializeHighLength();
+	initializeHighScore();
 	turnMusic(MENU_MUSIC);
 	
 	while (true) {
-		if (STATE == LIVE || PLAYING_STATE) {
-			if (!PLAYING_STATE) {
-				handleMainMenu();
-				continue;
-			}
-			startGame();
-			STATE = LIVE;
-			controlInGame();
-		}
-		else if(!PLAYING_STATE) {
+		switch (PLAYING_STATE)
+		{
+		case WAITING_STATE:
 			handleMainMenu();
+			break;
+
+		case RUNNING_STATE:
+			startNewGame();
+			controlInGame();
+			break;
+
+		case LOADING_STATE:
+			startGame();
+			controlInGame();
+			break;
+
+		case LOSING_STATE:
+			break;
+
+		case EXIT_STATE:
+			return 0;
+
+
+		default:
+			break;
 		}
 	}
-	
+
 	return 0;
 }

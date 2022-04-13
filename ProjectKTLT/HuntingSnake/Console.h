@@ -34,7 +34,7 @@ using namespace std;
 #define ESC_KEY					27
 #define ENTER_KEY				13
 #define PAUSE_KEY				'P'
-#define SAVE_KEY				'F'
+#define SAVE_KEY				'T'
 #define LOAD_KEY				'L'
 
 #define UP_KEY					'W'
@@ -65,14 +65,22 @@ using namespace std;
 #define SCORE_TEXT				"SCORE"
 #define LEVEL_TEXT				"LEVEL"
 
+// Value for PLAYING_STATE
+#define RUNNING_STATE			1
+#define SAVING_STATE			2
+#define LOADING_STATE			3
+#define LOSING_STATE			4
+#define EXIT_STATE				5
+#define WAITING_STATE			6
+#define SETTING_STATE			7
 
-extern int CONSOLE_HEIGH;
-extern int CONSOLE_WIDTH;
-extern int BORDER_HEIGH;
-extern int BORDER_WIDTH;
+extern int consoleHeigh;
+extern int consoleWidth;
+extern int borderHeigh;
+extern int borderWidth;
 
 extern POINT LENGTH_VALUE_POS;
-extern POINT ROUND_VALUE_POS;
+extern POINT LEVEL_VALUE_POS;
 
 extern bool HAS_MUSIC;
 
@@ -107,7 +115,7 @@ void deleteGate();
 
 void displaySnakeSize();
 
-void displayRoundNumber();
+void displayLevel();
 
 void deleteBox(int row, int column);
 

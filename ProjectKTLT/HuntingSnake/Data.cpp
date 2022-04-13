@@ -16,7 +16,7 @@ void saveMenu() {
 
 	int boxWidth = 34;
 	int boxHeight = 12;
-	POINT GAME_P = { (BORDER_WIDTH - boxWidth) / 2, (BORDER_HEIGH - boxHeight) / 2 }; 
+	POINT GAME_P = { (borderWidth - boxWidth) / 2, (borderHeigh - boxHeight) / 2 }; 
 
 	int selectingLine = 1;
 
@@ -59,7 +59,7 @@ void saveMenu() {
 					printSavingBanner();
 
 				}
-				continueGame();
+				//continueGame();
 				break;
 			}
 			resetPressedKey();
@@ -86,7 +86,7 @@ void saveData(string fileName) {
 
 	// save index of current food
 	ofs << FOOD_INDEX << endl;
-	// save position of current foo: x and y
+	// save position of current food: x and y
 	ofs << food[FOOD_INDEX].x << " " << food[FOOD_INDEX].y << endl;
 
 	// if gate is exists, we need to save position of gate
@@ -97,19 +97,18 @@ void saveData(string fileName) {
 
 	ofs << INDEX_ID << endl;
 	ofs << SPEED << endl;
-	ofs << ROUND << endl;
+	ofs << LEVEL << endl;
 	ofs << MOVING << endl;
-	ofs << CHAR_LOCK << endl;
+	ofs << CHAR_LOCK;
 
-	ofs << WIN;
 	ofs.close();
 	// close file
 	//-----------------------------------------
 	NewLength.name = fileName;
 	NewLength.length = SNAKE_SIZE + SIZE_PLUS;
 
-	CreateNewHighLength();
-	SortHighLength();
+	createNewHighScore();
+	sortHighScore();
 }
 
 void loadMenu() {
@@ -127,11 +126,11 @@ void loadMenu() {
 	int boxWidth = 34;
 	int boxHeight = 12;
 	POINT GAME_P;
-	if (PLAYING_STATE) {
-		GAME_P = { (BORDER_WIDTH - boxWidth) / 2, (BORDER_HEIGH - boxHeight) / 2 };
+	if (PLAYING_STATE == LOADING_STATE) {
+		GAME_P = { (borderWidth - boxWidth) / 2, (borderHeigh - boxHeight) / 2 };
 	}
 	else {
-		GAME_P = { (CONSOLE_WIDTH - boxWidth) / 2, (CONSOLE_HEIGH - boxHeight) / 2 };
+		GAME_P = { (consoleWidth - boxWidth) / 2, (consoleHeigh - boxHeight) / 2 };
 	}
 	
 	int selectingLine = 1;
@@ -189,7 +188,7 @@ void loadData(string fileName) {
 	POINT snakeP_In[MAX_SNAKE_SIZE];
 	POINT foodP_In;
 	POINT gateP_In;
-	int indexId_In, speed_In, round_In, moving_In, charLock_In, win_In;
+	int indexId_In, speed_In, level_In, moving_In, charLock_In;
 
 	if (ifs) {
 		// TODO: check file is empty
@@ -207,10 +206,9 @@ void loadData(string fileName) {
 
 		ifs >> indexId_In;
 		ifs >> speed_In;
-		ifs >> round_In;
+		ifs >> level_In;
 		ifs >> moving_In;
 		ifs >> charLock_In;
-		ifs >> win_In;
 
 		ifs.close();
 
@@ -227,11 +225,10 @@ void loadData(string fileName) {
 	
 		INDEX_ID = indexId_In;
 		SPEED = speed_In;
-		ROUND = round_In;
+		LEVEL = level_In;
 		MOVING = moving_In;
 		CHAR_LOCK = charLock_In;
-		WIN = win_In;
-
+		
 		if (gateP_In.x != -1 && gateP_In.y != -1) {
 			gateP = gateP_In;
 			GATE_EXIST = true;			
