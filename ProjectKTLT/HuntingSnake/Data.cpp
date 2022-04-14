@@ -59,7 +59,6 @@ void saveMenu() {
 					printSavingBanner();
 
 				}
-				//continueGame();
 				break;
 			}
 			resetPressedKey();
@@ -70,45 +69,40 @@ void saveMenu() {
 void saveData(string fileName) {	
 	ofstream ofs(fileName);
 
-	ofstream f_user;
-	f_user.open(".\\Data\\username.txt", ios::app);
-	f_user << fileName << endl;
-	f_user.close();
-
 	//---------------------------------
 	// open file
-	// <SIZE_SNAKE> <SIZE_PLUS>
-	ofs << SNAKE_SIZE << " " << SIZE_PLUS << endl;
+	if (ofs) {
+		// <SIZE_SNAKE> <SIZE_PLUS>
+		ofs << SNAKE_SIZE << " " << SIZE_PLUS << endl;
 
-	// save points of snake
-	for (int i = 0; i < SNAKE_SIZE; i++)
-		ofs << snake[i].x << " " << snake[i].y << endl;
+		// save points of snake
+		for (int i = 0; i < SNAKE_SIZE; i++)
+			ofs << snake[i].x << " " << snake[i].y << endl;
 
-	// save index of current food
-	ofs << FOOD_INDEX << endl;
-	// save position of current food: x and y
-	ofs << food[FOOD_INDEX].x << " " << food[FOOD_INDEX].y << endl;
+		// save index of current food
+		ofs << FOOD_INDEX << endl;
+		// save position of current food: x and y
+		ofs << food[FOOD_INDEX].x << " " << food[FOOD_INDEX].y << endl;
 
-	// if gate is exists, we need to save position of gate
-	if (GATE_EXIST)
-		ofs << gateP.x << " " << gateP.y << endl;
-	else
-		ofs << -1 << " " << -1 << endl;
+		// if gate is exists, we need to save position of gate
+		if (GATE_EXIST)
+			ofs << gateP.x << " " << gateP.y << endl;
+		else
+			ofs << -1 << " " << -1 << endl;
 
-	ofs << INDEX_ID << endl;
-	ofs << SPEED << endl;
-	ofs << LEVEL << endl;
-	ofs << MOVING << endl;
-	ofs << CHAR_LOCK;
+		ofs << INDEX_ID << endl;
+		ofs << SPEED << endl;
+		ofs << LEVEL << endl;
+		ofs << MOVING << endl;
+		ofs << CHAR_LOCK;
 
-	ofs.close();
+		ofs.close();
+	}
+	else {
+		cout << fileName << " could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
 	// close file
-	//-----------------------------------------
-	NewLength.name = fileName;
-	NewLength.length = SNAKE_SIZE + SIZE_PLUS;
-
-	createNewHighScore();
-	sortHighScore();
 }
 
 void loadMenu() {
@@ -192,6 +186,11 @@ void loadData(string fileName) {
 
 	if (ifs) {
 		// TODO: check file is empty
+		if (ifs.eof()) {
+			ifs.close();
+			return;
+		}
+			
 
 		ifs >> snakeSize_In >> sizePLus_In;
 
@@ -233,5 +232,9 @@ void loadData(string fileName) {
 			gateP = gateP_In;
 			GATE_EXIST = true;			
 		}		
+	}
+	else {
+		cout << fileName << " could not be opened." << endl;
+		exit(EXIT_FAILURE);
 	}
 }

@@ -190,7 +190,7 @@ void printSavingBanner() {
 }
 
 void printStartingBanner() {
-	int logo_X = (borderWidth / 2) - 18;
+	int logo_X = (borderWidth / 2) - 12;
 	int logo_Y = (borderHeigh / 2) - 2;
 
 	const int logoLength = 4;
@@ -213,7 +213,7 @@ void printStartingBanner() {
 		" / |", 
 		" | |",
 		" |_|"};
-	POINT indexP = { logo_X + 16 , logo_Y };
+	POINT indexP = { logo_X + 13 , logo_Y };
 
 	if (HAS_MUSIC)
 		turnMusic(STARTING_SOUND);
@@ -250,48 +250,18 @@ void printLevelUpBanner() {
 					" |____\\___|\\_/\\___|_|  \\_,_| .__/",
 					"                           |_|   "
 	};
-	/*
-	string level[4 * MAX_LEVEL] = {
-		"  _ ",
-		" / |",
-		" | |",
-		" |_|", 
-		"  ___ ",
-		" |_  )",
-		"  / / ",
-		" /___|",
-		"  ____",
-		" |__ /",
-		"  |_ \\",
-		" |___/",
-		"  _ _  ",
-		" | | | ",
-		" |_  _|",
-		"   |_| ",
-		"  ___ ",
-		" | __|",
-		"|__ \\",
-		" |___/",
-		"   __ ",
-		"  / / ", 
-		" / _ \\",
-		" \\___/",
-		"  ____ ",
-		" |__  |",
-		"   / / ",
-		"  /_/  "
-		 };
-		 */
-	//POINT levelNumP = { logo_X + 16 , logo_Y + 2 };
-	
-	// use for loop to print logo "LEVEL UP"
-	for (int i = 0; i < logoLength; i++) {
-		goToXYAndPrintColorText(logo_X, logo_Y + i, logo[i]);
-	}
 
 	if (HAS_MUSIC)
 		turnMusic(LEVEL_UP_MUSIC);
-
+	
+	// use for loop to print logo "LEVEL UP"
+	for (int i = 0; i < 14; i++) {
+		for (int j = 0; j < logoLength; j++) {
+			goToXYAndPrintColorText(logo_X, logo_Y + j, logo[j], i);
+		}
+	}
+	Sleep(2000);
+	
 	// delete banner
 	clearScreen();
 }
@@ -477,10 +447,14 @@ void deleteBox(int height, int width) {
 }
 
 void deleteSnake() {
-	for (int i = 0; i < SNAKE_SIZE; i++) {
+	int i = 0;
+	GotoXY(snake[i]);
+	cout << " ";
+	for (i = 0; i < SNAKE_SIZE; i++) {
 		GotoXY(snake[i]);
 		cout << " ";
 	}
+	
 }
 
 void deleteFood() {

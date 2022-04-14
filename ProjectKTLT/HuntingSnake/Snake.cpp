@@ -67,8 +67,8 @@ MENU mainMenu() {
 	system("cls");	
 	MENU menu;
 
-	const int TOTAL_SELECTION = 5;
-	string options[TOTAL_SELECTION] = { NEW_GAME_TEXT, LOAD_GAME_TEXT, HIGH_SCORE_TEXT, SETTING_TEXT, EXIT_GAME_TEXT };
+	const int TOTAL_SELECTION = 4;
+	string options[TOTAL_SELECTION] = { NEW_GAME_TEXT, LOAD_GAME_TEXT, SETTING_TEXT, EXIT_GAME_TEXT };
 
 	int selectingLine = 0;
 	int SELECTING_COLOR = COLOR_LIGHT_BLUE;
@@ -132,21 +132,16 @@ void handleMainMenu() {
 				loadMenu();	
 				PLAYING_STATE = LOADING_STATE;
 				system("cls");
-				return;
-
-			case HIGH_SCORE_MODE:				
-				showHighScore();	
-				PLAYING_STATE = WAITING_STATE;
-				break;
+				return;			
 
 			case SETTING_MODE:
-				PLAYING_STATE = WAITING_STATE;
+				PLAYING_STATE = SETTING_STATE;
 				settingMenu();		
 				break;
 
 			case EXIT_GAME_MODE:
 				PLAYING_STATE = EXIT_STATE;
-				break;
+				return;
 
 			default:
 				break;
@@ -356,164 +351,13 @@ void processGate() {
 			snake[i].x = gateP.x;
 			snake[i].y = gateP.y;
 		}
-				
+		
+		// set position of snake head when snake get out the cave
 		snake[SNAKE_SIZE - 1].x = gateP.x;
 		snake[SNAKE_SIZE - 1].y = gateP.y + 1;
 		
 		printLevelUpBanner();
 	}
-}
-
-//Xu ly top 5 HIGH LENGTH
-bool isEmptyHighLengthFile() {
-	ifstream ifs;
-	string name;
-	int length;
-
-	ifs.open(".\\Data\\highlength.txt");
-	if (ifs >> name >> length) {
-		ifs.close();
-		return false;
-	}
-
-	ifs.close();
-	return true;
-}
-
-void saveHighScore() {
-	remove(".\\Data\\highlength.txt");
-
-	ofstream ofs;
-	ofs.open(".\\Data\\highlength.txt");
-
-	for (int i = 0; i < 4; i++)
-		ofs << HighLength[i].name << " " << HighLength[i].length << endl;
-	ofs << HighLength[4].name << " " << HighLength[4].length;
-
-	ofs.close();
-}
-
-void resetHighScore() {
-	for (int i = 0; i < 5; i++) {
-		HighLength[i].name = "[NONE]";
-		HighLength[i].length = 4;
-	}
-	saveHighScore();
-}
-
-void initializeHighScore() {
-	if (!isEmptyHighLengthFile()) {
-		string name;
-		int length;
-
-		ifstream ifs;
-		ifs.open(".\\Data\\highlength.txt");
-
-		int i = 0;
-
-		while (ifs >> name >> length) {
-			HighLength[i].name = name;
-			HighLength[i].length = length;
-			i++;
-		}
-
-		ifs.close();
-	}
-	else
-		resetHighScore();
-}
-
-void createNewHighScore()
-{
-	int minLength = HighLength[0].length;
-	int index = 0;
-	for (int i = 0; i < 5; i++)
-	{
-		if (HighLength[i].name == "[NONE]")
-		{
-			minLength = HighLength[i].length;
-			index = i;
-			break;
-		}
-		else if (HighLength[i].length < minLength)
-		{
-			minLength = HighLength[i].length;
-			index = i;
-		}
-	}
-
-	if (NewLength.length > minLength || (NewLength.length == 4 && HighLength[index].name == "[NONE]"))
-	{
-		HighLength[index].name = NewLength.name;
-		HighLength[index].length = NewLength.length;
-	}
-}
-
-void sortHighScore() {
-	for (int i = 0; i < 4; i++)
-		for (int j = i + 1; j < 5; j++)
-			if (HighLength[i].length < HighLength[j].length) {
-				string name = HighLength[i].name;
-				HighLength[i].name = HighLength[j].name;
-				HighLength[j].name = name;
-
-				int score = HighLength[i].length;
-				HighLength[i].length = HighLength[j].length;
-				HighLength[j].length = score;
-			}
-	saveHighScore();
-}
-
-void showHighScore() {
-	ifstream ifs;
-	ifs.open(".\\Data\\highlength.txt");
-
-	string name;
-	int length;
-
-	system("cls");
-
-	int column = 31;
-	int row = 9;
-	int xHighLength = (consoleWidth / 2) - 15;
-	int yHighLength = (consoleHeigh / 2) - 4;
-
-	for (int j = 0; j < row; j++) {
-		GotoXY(POINT{ xHighLength, yHighLength + j });
-		for (int k = 0; k < column; k++) {
-			if (j == 0)
-				cout << (unsigned char)220;
-			else if (j == 2 && k != 0 && k != column - 1)
-				cout << "*";
-			else if (j == row - 1)
-				cout << (unsigned char)223;
-			else if (k == 0 || k == column - 1)
-				cout << (unsigned char)219;
-			else
-				cout << " ";
-		}
-	}
-
-	while (true) {
-		GotoXY(POINT{ xHighLength + 10, yHighLength + 1 });
-		cout << "HIGH LENGTH";
-
-		int i = 0;
-
-		while (ifs >> name >> length) {
-			GotoXY(POINT{ xHighLength + 4, yHighLength + i + 3 });
-			cout << "#" << i + 1 << ". ";
-			GotoXY(POINT{ xHighLength + 8, yHighLength + i + 3 });
-			cout << name;
-			GotoXY(POINT{ xHighLength + 27, yHighLength + i + 3 });
-			cout << length;
-			i++;
-		}
-
-		if (_kbhit())
-			break;
-	}
-	ifs.close();
 }
 
 // Another functions

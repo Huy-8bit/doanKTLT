@@ -37,3 +37,5 @@
 ./save/Save_slot_4.txt
 ./save/Save_slot_3.txt
 ./save/Save_slot_3.txt
+./save/Save_slot_4.txt
+./save/Save_slot_3.txt

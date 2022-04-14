@@ -64,12 +64,12 @@ void controlInGame() {
 
 int main() {
 	initialGame();
-	initializeHighScore();
 	turnMusic(MENU_MUSIC);
 	
 	while (true) {
 		switch (PLAYING_STATE)
 		{
+		case SETTING_STATE:
 		case WAITING_STATE:
 			handleMainMenu();
 			break;
@@ -89,7 +89,6 @@ int main() {
 
 		case EXIT_STATE:
 			return 0;
-
 
 		default:
 			break;

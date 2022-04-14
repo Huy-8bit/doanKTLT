@@ -45,15 +45,13 @@ using namespace std;
 // Text in game menu
 #define NEW_GAME_TEXT			"NEW GAME"
 #define LOAD_GAME_TEXT			"LOAD GAME"
-#define HIGH_SCORE_TEXT			"HIGH SCORE"
 #define SETTING_TEXT			"SETTING"
 #define EXIT_GAME_TEXT			"EXIT GAME"
 
 #define NEW_GAME_MODE			0
 #define LOAD_GAME_MODE			1
-#define HIGH_SCORE_MODE			2
-#define SETTING_MODE			3
-#define EXIT_GAME_MODE			4
+#define SETTING_MODE			2
+#define EXIT_GAME_MODE			3
 
 #define YES_TEXT				"Yes"
 #define NO_TEXT					"No"
