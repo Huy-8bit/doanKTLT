@@ -64,7 +64,7 @@ void turnMusic(int index) {
 		PlaySound(TEXT(".\\Sound\\menu.wav"), NULL, SND_LOOP | SND_ASYNC);
 		break;
 	case LEVEL_UP_MUSIC:
-		PlaySound(TEXT(".\\Sound\\LevelUp.wav"), NULL, SND_SYNC);
+		PlaySound(TEXT(".\\Sound\\LevelUp.wav"), NULL, SND_ASYNC);
 		break;
 	case DEAD_MUSIC:
 		PlaySound(TEXT(".\\Sound\\LoseGame.wav"), NULL, SND_ASYNC);
@@ -259,6 +259,7 @@ void printLevelUpBanner() {
 		for (int j = 0; j < logoLength; j++) {
 			goToXYAndPrintColorText(logo_X, logo_Y + j, logo[j], i);
 		}
+		Sleep(100);
 	}
 	Sleep(2000);
 	
