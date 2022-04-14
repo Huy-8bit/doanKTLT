@@ -1,5 +1,0 @@
-./save/Save_slot_5.txt 16
-./save/Save_slot_1.txt 16
-./save/Save_slot_4.txt 16
-./save/Save_slot_4.txt 14
-./save/Save_slot_3.txt 13
